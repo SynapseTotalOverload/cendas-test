@@ -1,16 +1,21 @@
 import { useRef, useCallback, useLayoutEffect } from "react";
-import { Stage, Layer, Image } from "react-konva";
+import { Stage, Layer, Image, Circle } from "react-konva";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
+import { useConstructTasksStore } from "@/stores/construct-tasks-store";
+import type { IConstructTask } from "@/types/construct-task";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 3;
 const SCALE_FACTOR = 1.1;
+const MARKER_RADIUS = 8;
 
 const ConstructMainScreen = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
+  const { tasks } = useConstructTasksStore.getState();
+  const formattedTasks = Object?.values(tasks) || [];
   const {
     imageElement,
     imageSize,
@@ -20,11 +25,9 @@ const ConstructMainScreen = () => {
     position,
     setPosition,
     handleImageUpload,
-    resetImage,
     resetView,
     setStageSize,
   } = useKonvaCanvas({ containerRef });
-
   // Ensure stage size is always up to date with parent div
   useLayoutEffect(() => {
     if (containerRef.current) {
@@ -139,6 +142,18 @@ const ConstructMainScreen = () => {
                 y={0}
                 listening={false}
               />
+              {formattedTasks?.length > 0 &&
+                formattedTasks.map(task => (
+                  <Circle
+                    key={task.id}
+                    x={task.coordinates.x}
+                    y={task.coordinates.y}
+                    radius={MARKER_RADIUS}
+                    fill="#FF4D4F"
+                    stroke="#FFF"
+                    strokeWidth={2}
+                  />
+                ))}
             </Layer>
           </Stage>
         )}

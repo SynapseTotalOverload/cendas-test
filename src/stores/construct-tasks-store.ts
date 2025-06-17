@@ -16,7 +16,7 @@ type TConstructTasksActions = {
   clearTasks: () => void;
 };
 
-export const store = createStore(
+export const useConstructTasksStore = createStore(
   subscribeWithSelector(
     combine<TConstructTasksState, TConstructTasksActions>({ tasks: {} }, (set, get) => ({
       addTask: (task: IConstructTask) =>
@@ -47,6 +47,6 @@ export const store = createStore(
   ),
 );
 
-export const tasks$ = toStream(store, state => Object.values(state.tasks), {
+export const tasks$ = toStream(useConstructTasksStore, state => Object.values(state.tasks), {
   fireImmediately: true,
 });

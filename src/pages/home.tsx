@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { store } from "@/stores/construct-tasks-store";
+import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { syncZustandToRxDB, syncRxDBToZustand } from "@/lib/sync-db";
 import type { RxDatabase } from "rxdb";
 import type { IConstructTask, TConstructStatuses } from "@/types/construct-task";
@@ -12,7 +12,7 @@ export default function App() {
 
   useEffect(() => {
     // Subscribe to store changes
-    const unsubscribe = store.subscribe(
+    const unsubscribe = useConstructTasksStore.subscribe(
       state => Object.values(state.tasks),
       tasks => setTasks(tasks),
     );
@@ -58,7 +58,7 @@ export default function App() {
       checklist: [],
     };
 
-    store.getState().addTask(newTask);
+    useConstructTasksStore.getState().addTask(newTask);
     setNewTaskName("");
   };
 
@@ -70,7 +70,7 @@ export default function App() {
       completed: "awaiting",
     };
 
-    store.getState().updateTask({
+    useConstructTasksStore.getState().updateTask({
       ...task,
       status: nextStatus[task.status],
       updatedAt: new Date().toISOString(),
@@ -78,7 +78,7 @@ export default function App() {
   };
 
   const deleteTask = (id: string) => {
-    store.getState().deleteTask(id);
+    useConstructTasksStore.getState().deleteTask(id);
   };
 
   return (
@@ -137,7 +137,7 @@ export default function App() {
             </button>
             <button
               className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-              onClick={() => store.getState().clearTasks()}>
+              onClick={() => useConstructTasksStore.getState().clearTasks()}>
               Clear All Tasks
             </button>
           </div>

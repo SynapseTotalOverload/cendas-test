@@ -1,4 +1,7 @@
+import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { useState, useEffect } from "react";
+import { taskConstants } from "@/constants/task-constants";
+import type { IConstructTask } from "@/types/construct-task";
 
 interface UseKonvaCanvasProps {
   containerRef?: React.RefObject<HTMLDivElement>;
@@ -21,6 +24,7 @@ interface UseKonvaCanvasReturn {
 
 export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProps = {}): UseKonvaCanvasReturn {
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
+  const { setTasks } = useConstructTasksStore.getState();
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
   const [stageSize, setStageSize] = useState<{ width: number; height: number } | null>(null);
   const [scale, setScale] = useState(1);
@@ -76,6 +80,7 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
               ? stageSize.width / image.width
               : stageSize.height / image.height,
           );
+          setTasks(taskConstants);
         } else {
           setPosition({ x: 0, y: 0 });
           setScale(1);

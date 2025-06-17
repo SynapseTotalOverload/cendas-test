@@ -1,4 +1,4 @@
-import { tasks$, store } from "@/stores/construct-tasks-store";
+import { tasks$, useConstructTasksStore } from "@/stores/construct-tasks-store";
 import type { RxDatabase } from "rxdb";
 import type { IConstructTask } from "@/types/construct-task";
 
@@ -32,7 +32,7 @@ export function syncRxDBToZustand(db: RxDatabase) {
     syncingFromRxDB = true;
     try {
       const tasks = docs.map(doc => doc.toJSON() as IConstructTask);
-      store.getState().setTasks(tasks);
+      useConstructTasksStore.getState().setTasks(tasks);
       console.log("Synced tasks from RxDB to Zustand:", tasks.length);
     } finally {
       syncingFromRxDB = false;
