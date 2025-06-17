@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
-import type { IConstructTask } from "@/types/construct-task";
+
+import { TableIcon } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 3;
@@ -12,6 +14,7 @@ const SCALE_FACTOR = 1.1;
 const MARKER_SIZE = 12;
 
 const ConstructMainScreen = () => {
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const { tasks } = useConstructTasksStore.getState();
@@ -101,7 +104,7 @@ const ConstructMainScreen = () => {
   };
 
   return (
-    <div className="flex h-[calc(100vh-4rem)]">
+    <div className="flex h-[calc(100vh-4rem)] relative">
       <div ref={containerRef} className="flex-1 relative bg-muted/10" style={{ minWidth: 0 }}>
         {!imageElement ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -157,6 +160,15 @@ const ConstructMainScreen = () => {
             </Layer>
           </Stage>
         )}
+
+        {/* Floating Button */}
+        <Button
+          variant="secondary"
+          size="icon"
+          className="fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+          onClick={() => navigate("/table-view")}>
+          <TableIcon className="w-6 h-6" />
+        </Button>
       </div>
 
       {imageElement && (
