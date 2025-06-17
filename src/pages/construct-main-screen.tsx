@@ -9,7 +9,7 @@ import type { IConstructTask } from "@/types/construct-task";
 const MIN_SCALE = 1;
 const MAX_SCALE = 3;
 const SCALE_FACTOR = 1.1;
-const MARKER_RADIUS = 8;
+const MARKER_SIZE = 12;
 
 const ConstructMainScreen = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -146,12 +146,12 @@ const ConstructMainScreen = () => {
                 formattedTasks.map(task => (
                   <Circle
                     key={task.id}
-                    x={task.coordinates.x}
-                    y={task.coordinates.y}
-                    radius={MARKER_RADIUS}
+                    x={task.coordinates.x * scale}
+                    y={task.coordinates.y * scale}
+                    radius={MARKER_SIZE}
                     fill="#FF4D4F"
-                    stroke="#FFF"
-                    strokeWidth={2}
+                    scaleX={1 / scale}
+                    scaleY={1 / scale}
                   />
                 ))}
             </Layer>
