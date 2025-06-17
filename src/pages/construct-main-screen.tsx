@@ -145,18 +145,25 @@ const ConstructMainScreen = () => {
                 y={0}
                 listening={false}
               />
-              {formattedTasks?.length > 0 &&
-                formattedTasks.map(task => (
-                  <Circle
+              {formattedTasks.map(task => {
+                const screenX = task.coordinates.x * scale + position.x;
+                const screenY = task.coordinates.y * scale + position.y;
+
+                return (
+                  <div
                     key={task.id}
-                    x={task.coordinates.x * scale}
-                    y={task.coordinates.y * scale}
-                    radius={MARKER_SIZE}
-                    fill="#FF4D4F"
-                    scaleX={1 / scale}
-                    scaleY={1 / scale}
-                  />
-                ))}
+                    className="absolute"
+                    style={{
+                      left: screenX - 12, // offset to center
+                      top: screenY - 12,
+                      width: 24,
+                      height: 24,
+                      pointerEvents: "none",
+                    }}>
+                    <TableIcon className="text-red-500 w-6 h-6" />
+                  </div>
+                );
+              })}
             </Layer>
           </Stage>
         )}

@@ -10,6 +10,7 @@ type TConstructTasksState = {
 type TConstructTasksActions = {
   addTask: (task: IConstructTask) => void;
   getTask: (id: string) => IConstructTask | undefined;
+  getFormattedTasks: () => IConstructTask[];
   updateTask: (task: IConstructTask) => void;
   deleteTask: (id: string) => void;
   setTasks: (tasks: IConstructTask[]) => void;
@@ -24,6 +25,7 @@ export const useConstructTasksStore = createStore(
           tasks: { ...state.tasks, [task.id]: task },
         })),
       getTask: (id: string) => get().tasks[id],
+      getFormattedTasks: () => Object.values(get().tasks),
       updateTask: (task: IConstructTask) =>
         set(state => ({
           tasks: { ...state.tasks, [task.id]: task },

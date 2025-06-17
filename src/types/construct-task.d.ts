@@ -7,12 +7,29 @@ export type TChecklistStatuses =
   | "not-applicable"
   | "not-started"
   | "not-required";
+
+export type TConstructIconID =
+  | "lampwork"
+  | "lighting"
+  | "electrical"
+  | "plumbing"
+  | "painting"
+  | "carpentry"
+  | "masonry"
+  | "flooring"
+  | "roofing"
+  | "walling"
+  | "ceiling"
+  | "doors"
+  | "windows"
+  | "other";
+
 export interface IConstructTask {
   id: string;
   name: string;
   description: string;
   status: TConstructStatuses;
-  iconID: string;
+  iconID: TConstructIconID;
   coordinates: {
     x: number;
     y: number;
