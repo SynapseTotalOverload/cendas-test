@@ -1,12 +1,14 @@
 import { useRef, useCallback, useLayoutEffect } from "react";
-import { Stage, Layer, Image, Circle } from "react-konva";
+import { Stage, Layer, Image, Circle, Shape } from "react-konva";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 
 import { TableIcon } from "lucide-react";
+import { icons } from "lucide";
 import { useNavigate } from "react-router";
+import { getTaskColor, getTaskIconText, renderSvgToKonvaReact } from "@/lib/helpers";
 
 const MIN_SCALE = 1;
 const MAX_SCALE = 3;
@@ -145,25 +147,23 @@ const ConstructMainScreen = () => {
                 y={0}
                 listening={false}
               />
-              {formattedTasks.map(task => {
-                const screenX = task.coordinates.x * scale + position.x;
-                const screenY = task.coordinates.y * scale + position.y;
+              {formattedTasks?.length > 0 &&
+                formattedTasks.map(task => {
+                  const iconName = getTaskIconText(task.iconID);
+                  console.log(iconName, 66);
+                  const icon = icons[iconName as keyof typeof icons];
+                  console.log(icon, 44);
+                  const svg = renderSvgToKonvaReact(
+                    icon,
+                    task.coordinates.x,
+                    task.coordinates.y,
+                    scale,
+                    task.id,
+                    getTaskColor(task.status),
+                  );
 
-                return (
-                  <div
-                    key={task.id}
-                    className="absolute"
-                    style={{
-                      left: screenX - 12, // offset to center
-                      top: screenY - 12,
-                      width: 24,
-                      height: 24,
-                      pointerEvents: "none",
-                    }}>
-                    <TableIcon className="text-red-500 w-6 h-6" />
-                  </div>
-                );
-              })}
+                  return svg;
+                })}
             </Layer>
           </Stage>
         )}

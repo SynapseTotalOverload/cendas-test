@@ -77,6 +77,9 @@ importers:
       konva:
         specifier: ^9.3.20
         version: 9.3.20
+      lucide:
+        specifier: ^0.515.0
+        version: 0.515.0
       lucide-react:
         specifier: ^0.516.0
         version: 0.516.0(react@19.1.0)
@@ -2435,6 +2438,9 @@ packages:
     resolution: {integrity: sha512-aybBJzLHcw1CIn3rUcRkztB37dsJATtpffLNX+0/w+ws2p21nYIlOwX/B5fqxq8F/BjqVemnJX8chKwRidvROg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lucide@0.515.0:
+    resolution: {integrity: sha512-n7tFK3R1HdsxwM5rMOa6twAi/4RGZCysc7dmk7Cr2GiOUcnHX0+MX9xw3xynpbekXCgS4+o9HeIWhBl3rZHIAA==}
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -5407,6 +5413,8 @@ snapshots:
   lucide-react@0.516.0(react@19.1.0):
     dependencies:
       react: 19.1.0
+
+  lucide@0.515.0: {}
 
   magic-string@0.30.17:
     dependencies:
