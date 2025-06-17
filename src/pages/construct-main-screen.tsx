@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useLayoutEffect } from "react";
 import { Stage, Layer, Image } from "react-konva";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
@@ -10,7 +10,7 @@ const SCALE_FACTOR = 1.1;
 
 const ConstructMainScreen = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const {
     imageElement,
     imageSize,
@@ -22,7 +22,16 @@ const ConstructMainScreen = () => {
     handleImageUpload,
     resetImage,
     resetView,
-  } = useKonvaCanvas();
+    setStageSize,
+  } = useKonvaCanvas({ containerRef });
+
+  // Ensure stage size is always up to date with parent div
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      setStageSize({ width: rect.width, height: rect.height });
+    }
+  }, [containerRef, setStageSize]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -90,7 +99,7 @@ const ConstructMainScreen = () => {
 
   return (
     <div className="flex h-[calc(100vh-4rem)]">
-      <div ref={containerRef} className="flex-1 relative bg-muted/10">
+      <div ref={containerRef} className="flex-1 relative bg-muted/10" style={{ minWidth: 0 }}>
         {!imageElement ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
@@ -100,36 +109,38 @@ const ConstructMainScreen = () => {
             <p className="mt-2 text-sm text-gray-500">Click to upload or drag and drop your image here</p>
           </div>
         ) : (
-          <div className="absolute inset-0">
-            <Stage
-              width={stageSize?.width}
-              height={stageSize?.height}
-              onWheel={handleWheel}
-              draggable={scale > 1}
-              onDragStart={handleDragStart}
-              onDragEnd={handleDragEnd}
-              onDragMove={handleDragMove}
-              x={position.x}
-              y={position.y}
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-                cursor: scale > 1 ? "grab" : "default",
-              }}>
-              <Layer>
-                <Image
-                  image={imageElement}
-                  width={imageSize?.width}
-                  height={imageSize?.height}
-                  scaleX={scale}
-                  scaleY={scale}
-                  listening={false}
-                />
-              </Layer>
-            </Stage>
-          </div>
+          <Stage
+            width={stageSize?.width || 0}
+            height={stageSize?.height || 0}
+            onWheel={handleWheel}
+            draggable={scale > 1}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            onDragMove={handleDragMove}
+            x={position.x}
+            y={position.y}
+            style={{
+              width: "100%",
+              height: "100%",
+              position: "absolute",
+              left: 0,
+              top: 0,
+              cursor: scale > 1 ? "grab" : "default",
+              background: "transparent",
+            }}>
+            <Layer>
+              <Image
+                image={imageElement}
+                width={imageSize?.width}
+                height={imageSize?.height}
+                scaleX={scale}
+                scaleY={scale}
+                x={0}
+                y={0}
+                listening={false}
+              />
+            </Layer>
+          </Stage>
         )}
       </div>
 

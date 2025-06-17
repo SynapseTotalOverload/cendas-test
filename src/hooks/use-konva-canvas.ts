@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 interface UseKonvaCanvasProps {
+  containerRef?: React.RefObject<HTMLDivElement>;
   onImageLoad?: (image: HTMLImageElement) => void;
 }
 
@@ -15,43 +16,45 @@ interface UseKonvaCanvasReturn {
   handleImageUpload: (file: File) => void;
   resetImage: () => void;
   resetView: () => void;
+  setStageSize: (size: { width: number; height: number }) => void;
 }
 
-export function useKonvaCanvas({ onImageLoad }: UseKonvaCanvasProps = {}): UseKonvaCanvasReturn {
+export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProps = {}): UseKonvaCanvasReturn {
   const [imageElement, setImageElement] = useState<HTMLImageElement | null>(null);
   const [imageSize, setImageSize] = useState<{ width: number; height: number } | null>(null);
   const [stageSize, setStageSize] = useState<{ width: number; height: number } | null>(null);
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const calculateStageDimensions = (imageWidth: number, imageHeight: number) => {
-    // Account for the sidebar width (60px) and navigation height (4rem = 64px)
-    const maxWidth = window.innerWidth - 60;
-    const maxHeight = window.innerHeight - 64;
-
-    const imageAspectRatio = imageWidth / imageHeight;
-    const containerAspectRatio = maxWidth / maxHeight;
-
-    let width = imageWidth;
-    let height = imageHeight;
-
-    if (imageAspectRatio > containerAspectRatio) {
-      // Image is wider than container
-      width = maxWidth;
-      height = width / imageAspectRatio;
-    } else {
-      // Image is taller than container
-      height = maxHeight;
-      width = height * imageAspectRatio;
+  // Set stage size to parent container size
+  useEffect(() => {
+    function updateStageSize() {
+      if (containerRef && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        setStageSize({ width: rect.width, height: rect.height });
+      } else {
+        // fallback to window size minus sidebar/nav
+        const maxWidth = window.innerWidth - 60;
+        const maxHeight = window.innerHeight - 64;
+        setStageSize({ width: maxWidth, height: maxHeight });
+      }
     }
-
-    return { width, height };
-  };
+    updateStageSize();
+    window.addEventListener("resize", updateStageSize);
+    return () => window.removeEventListener("resize", updateStageSize);
+  }, [containerRef]);
 
   const resetView = () => {
     if (imageSize && stageSize) {
-      setScale(stageSize.width / imageSize.width);
-      setPosition({ x: 0, y: 0 });
+      // Center image in stage
+      const x = (stageSize.width - imageSize.width * scale) / 2;
+      const y = (stageSize.height - imageSize.height * scale) / 2;
+      setPosition({ x, y });
+      setScale(
+        stageSize.width / imageSize.width < stageSize.height / imageSize.height
+          ? stageSize.width / imageSize.width
+          : stageSize.height / imageSize.height,
+      );
     }
   };
 
@@ -63,11 +66,20 @@ export function useKonvaCanvas({ onImageLoad }: UseKonvaCanvasProps = {}): UseKo
       image.onload = () => {
         setImageElement(image);
         setImageSize({ width: image.width, height: image.height });
-
-        const { width, height } = calculateStageDimensions(image.width, image.height);
-        setStageSize({ width, height });
-        setScale(width / image.width); // Initial scale to fit
-        setPosition({ x: 0, y: 0 }); // Reset position
+        // Center image in stage
+        if (stageSize) {
+          const x = (stageSize.width - image.width * scale) / 2;
+          const y = (stageSize.height - image.height * scale) / 2;
+          setPosition({ x, y });
+          setScale(
+            stageSize.width / image.width < stageSize.height / image.height
+              ? stageSize.width / image.width
+              : stageSize.height / image.height,
+          );
+        } else {
+          setPosition({ x: 0, y: 0 });
+          setScale(1);
+        }
         onImageLoad?.(image);
       };
     };
@@ -82,26 +94,6 @@ export function useKonvaCanvas({ onImageLoad }: UseKonvaCanvasProps = {}): UseKo
     setPosition({ x: 0, y: 0 });
   };
 
-  // Update stage size on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (imageElement && imageSize) {
-        const { width, height } = calculateStageDimensions(imageSize.width, imageSize.height);
-        setStageSize({ width, height });
-        // Keep the same relative position when resizing
-        const scaleChange = width / imageSize.width / scale;
-        setScale(width / imageSize.width);
-        setPosition({
-          x: position.x * scaleChange,
-          y: position.y * scaleChange,
-        });
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [imageElement, imageSize, scale, position]);
-
   return {
     imageElement,
     imageSize,
@@ -113,5 +105,6 @@ export function useKonvaCanvas({ onImageLoad }: UseKonvaCanvasProps = {}): UseKo
     handleImageUpload,
     resetImage,
     resetView,
+    setStageSize,
   };
 }
