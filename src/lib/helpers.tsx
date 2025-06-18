@@ -2,6 +2,7 @@ import type { TConstructIconID, TConstructStatuses } from "@/types/construct-tas
 import { Lightbulb, Zap, Droplet, Paintbrush, Hammer, Building, Layers, AppWindowMac, Sun } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Group, Circle, Path, Rect, Ellipse } from "react-konva";
+import type Konva from "konva";
 
 export function getTaskIcon(iconID: TConstructIconID) {
   switch (iconID) {
@@ -77,9 +78,23 @@ export function getTaskColor(status: TConstructStatuses) {
       return "#6a6a6a";
   }
 }
-export function renderSvgToKonvaReact(icon: any[], x: number, y: number, key?: string, color?: string) {
+export function renderSvgToKonvaReact(
+  icon: any[],
+  x: number,
+  y: number,
+  key?: string,
+  color?: string,
+  onAction?: (e: Konva.KonvaEventObject<MouseEvent>) => void,
+) {
   return (
-    <Group key={key} x={x} y={y}>
+    <Group
+      className="cursor-pointer"
+      onClick={(e: Konva.KonvaEventObject<MouseEvent>) => {
+        onAction?.(e);
+      }}
+      key={key}
+      x={x}
+      y={y}>
       {/* Background circle at center */}
       <Circle radius={12} fill={color} stroke="#000000" strokeWidth={1} />
 

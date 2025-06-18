@@ -10,7 +10,22 @@ export const taskConstants: IConstructTask[] = [
     coordinates: { x: 100, y: 200 },
     createdAt: "2024-06-01T08:00:00Z",
     updatedAt: "2024-06-01T08:00:00Z",
-    checklist: [],
+    checklist: [
+      {
+        id: "1",
+        name: "Excavate and pour concrete for the building foundation.",
+        status: { id: "pending", name: "Pending" },
+        iconID: "lampwork",
+        description: "Excavate and pour concrete for the building foundation.",
+      },
+      {
+        id: "2",
+        name: "Install reinforcement steel",
+        status: { id: "completed", name: "Completed" },
+        iconID: "lampwork",
+        description: "Install reinforcement steel",
+      },
+    ],
   },
   {
     id: "2",
@@ -21,7 +36,22 @@ export const taskConstants: IConstructTask[] = [
     coordinates: { x: 300, y: 250 },
     createdAt: "2024-06-01T08:10:00Z",
     updatedAt: "2024-06-01T08:10:00Z",
-    checklist: [],
+    checklist: [
+      {
+        id: "1",
+        name: "Excavate and pour concrete for the building foundation.",
+        status: { id: "pending", name: "Pending" },
+        iconID: "lampwork",
+        description: "Excavate and pour concrete for the building foundation.",
+      },
+      {
+        id: "2",
+        name: "Install reinforcement steel",
+        status: { id: "completed", name: "Completed" },
+        iconID: "lampwork",
+        description: "Install reinforcement steel",
+      },
+    ],
   },
   {
     id: "3",
@@ -32,7 +62,15 @@ export const taskConstants: IConstructTask[] = [
     coordinates: { x: 500, y: 180 },
     createdAt: "2024-06-01T08:20:00Z",
     updatedAt: "2024-06-01T08:20:00Z",
-    checklist: [],
+    checklist: [
+      {
+        id: "1",
+        name: "Excavate and pour concrete for the building foundation.",
+        status: { id: "pending", name: "Pending" },
+        iconID: "lampwork",
+        description: "Excavate and pour concrete for the building foundation.",
+      },
+    ],
   },
   {
     id: "4",
@@ -43,7 +81,15 @@ export const taskConstants: IConstructTask[] = [
     coordinates: { x: 200, y: 400 },
     createdAt: "2024-06-01T08:30:00Z",
     updatedAt: "2024-06-01T08:30:00Z",
-    checklist: [],
+    checklist: [
+      {
+        id: "1",
+        name: "Excavate and pour concrete for the building foundation.",
+        status: { id: "pending", name: "Pending" },
+        iconID: "lampwork",
+        description: "Excavate and pour concrete for the building foundation.",
+      },
+    ],
   },
   {
     id: "5",
@@ -54,6 +100,14 @@ export const taskConstants: IConstructTask[] = [
     coordinates: { x: 350, y: 350 },
     createdAt: "2024-06-01T08:40:00Z",
     updatedAt: "2024-06-01T08:40:00Z",
-    checklist: [],
+    checklist: [
+      {
+        id: "1",
+        name: "Excavate and pour concrete for the building foundation.",
+        status: { id: "pending", name: "Pending" },
+        iconID: "lampwork",
+        description: "Excavate and pour concrete for the building foundation.",
+      },
+    ],
   },
 ];

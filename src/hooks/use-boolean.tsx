@@ -7,7 +7,7 @@ export function useBoolean(initialState: BoolState = {}) {
 
   const isBool = useCallback(
     (key: string): boolean => {
-      return !!state[key];
+      return !!state[key] || false;
     },
     [state],
   );
