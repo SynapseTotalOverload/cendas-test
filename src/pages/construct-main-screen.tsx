@@ -150,14 +150,14 @@ const ConstructMainScreen = () => {
               {formattedTasks?.length > 0 &&
                 formattedTasks.map(task => {
                   const iconName = getTaskIconText(task.iconID);
-                  console.log(iconName, 66);
+
                   const icon = icons[iconName as keyof typeof icons];
-                  console.log(icon, 44);
+
                   const svg = renderSvgToKonvaReact(
                     icon,
-                    task.coordinates.x,
-                    task.coordinates.y,
-                    scale,
+                    task.coordinates.x * scale,
+                    task.coordinates.y * scale,
+
                     task.id,
                     getTaskColor(task.status),
                   );

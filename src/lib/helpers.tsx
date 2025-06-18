@@ -64,75 +64,72 @@ export function getTaskStatus(status: TConstructStatuses) {
   }
 }
 export function getTaskColor(status: TConstructStatuses) {
- 
   switch (status) {
     case "awaiting":
-      return "#2618e9";
+      return "#2618e9f4";
     case "pending":
       return "#f7402f";
     case "in-progress":
-      return "#ded222";
+      return "#d7cb1e";
     case "completed":
-      return "#00ff22";
+      return "#05c91f";
     default:
       return "#6a6a6a";
   }
 }
-// Convert SVG path data to Konva shape
-export function renderSvgToKonvaReact(
-  icon: any[],
-  x: number,
-  y: number,
-  scale: number = 1,
-  key?: string,
-  color?: string,
-) {
-  console.log(icon, 33);
+export function renderSvgToKonvaReact(icon: any[], x: number, y: number, key?: string, color?: string) {
   return (
-    <Group key={key} x={x} y={y} scaleX={scale} scaleY={scale}>
-      <Circle radius={16} fill={color} stroke="#000000" strokeWidth={1} />
-      {icon.map(([tag, attrs], idx) => {
-        if (tag === "path") {
-          return <Path key={idx} data={attrs.d} stroke="#000000" scaleX={0.8} scaleY={0.8} x={-12} y={-12} />;
-        }
-        if (tag === "circle") {
-          return <Circle key={idx} radius={attrs.r} fill={color} stroke="#000000" strokeWidth={1} />;
-        }
-        if (tag === "ellipse") {
-          return (
-            <Ellipse
-              key={idx}
-              radiusX={attrs.rx}
-              cx={attrs.cx}
-              radiusY={attrs.ry}
-              cy={attrs.cy}
-              rx={attrs.rx}
-              ry={attrs.ry}
-              fill={color}
-              stroke="#000000"
-              strokeWidth={1}
-            />
-          );
-        }
+    <Group key={key} x={x} y={y}>
+      {/* Background circle at center */}
+      <Circle radius={12} fill={color} stroke="#000000" strokeWidth={1} />
 
-        if (tag === "rect") {
-          return (
-            <Rect
-              stroke="#000000"
-              key={idx}
-              x={parseFloat(attrs.x) - 12}
-              y={parseFloat(attrs.y) - 12}
-              width={parseFloat(attrs.width)}
-              height={parseFloat(attrs.height)}
-              cornerRadius={attrs.rx ? parseFloat(attrs.rx) : 0}
-              scaleX={0.8}
-              scaleY={0.8}
-            />
-          );
-        }
+      {/* Center icon content */}
+      <Group offsetX={12} offsetY={12} x={12} y={12}>
+        {icon.map(([tag, attrs], idx) => {
+          if (tag === "path") {
+            return (
+              <Path key={idx} data={attrs.d} stroke="#FFFFFF" scaleX={0.8} scaleY={0.8} offsetX={12} offsetY={12} />
+            );
+          }
 
-        return null;
-      })}
+          if (tag === "circle") {
+            return <Circle key={idx} radius={attrs.r} x={0} y={0} fill={color} stroke="#FFFFFF" strokeWidth={1} />;
+          }
+
+          if (tag === "ellipse") {
+            return (
+              <Ellipse
+                key={idx}
+                radiusX={attrs.rx}
+                radiusY={attrs.ry}
+                x={attrs.cx - 12}
+                y={attrs.cy - 12}
+                fill={color}
+                stroke="#FFFFFF"
+                strokeWidth={1}
+              />
+            );
+          }
+
+          if (tag === "rect") {
+            return (
+              <Rect
+                key={idx}
+                x={parseFloat(attrs.x) - 12}
+                y={parseFloat(attrs.y) - 12}
+                width={parseFloat(attrs.width)}
+                height={parseFloat(attrs.height)}
+                cornerRadius={attrs.rx ? parseFloat(attrs.rx) : 0}
+                scaleX={0.8}
+                scaleY={0.8}
+                stroke="#FFFFFF"
+              />
+            );
+          }
+
+          return null;
+        })}
+      </Group>
     </Group>
   );
 }
