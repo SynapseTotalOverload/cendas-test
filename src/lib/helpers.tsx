@@ -64,7 +64,7 @@ export function getTaskStatus(status: TConstructStatuses) {
   }
 }
 export function getTaskColor(status: TConstructStatuses) {
-  console.log(status, 66);
+ 
   switch (status) {
     case "awaiting":
       return "#2618e9";
