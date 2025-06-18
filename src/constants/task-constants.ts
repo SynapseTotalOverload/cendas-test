@@ -1,8 +1,9 @@
 import type { IConstructTask } from "@/types/construct-task";
+import { v4 as uuidv4 } from "uuid";
 
 export const taskConstants: IConstructTask[] = [
   {
-    id: "1",
+    id: uuidv4(),
     name: "Foundation Work",
     description: "Excavate and pour concrete for the building foundation.",
     status: "pending",
@@ -12,14 +13,14 @@ export const taskConstants: IConstructTask[] = [
     updatedAt: "2024-06-01T08:00:00Z",
     checklist: [
       {
-        id: "1",
+        id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
         status: { id: "pending", name: "Pending" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
       {
-        id: "2",
+        id: uuidv4(),
         name: "Install reinforcement steel",
         status: { id: "completed", name: "Completed" },
         iconID: "lampwork",
@@ -28,7 +29,7 @@ export const taskConstants: IConstructTask[] = [
     ],
   },
   {
-    id: "2",
+    id: uuidv4(),
     name: "Framing",
     description: "Construct the structural framework for walls and floors.",
     status: "awaiting",
@@ -38,14 +39,14 @@ export const taskConstants: IConstructTask[] = [
     updatedAt: "2024-06-01T08:10:00Z",
     checklist: [
       {
-        id: "1",
+        id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
         status: { id: "pending", name: "Pending" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
       {
-        id: "2",
+        id: uuidv4(),
         name: "Install reinforcement steel",
         status: { id: "completed", name: "Completed" },
         iconID: "lampwork",
@@ -54,7 +55,7 @@ export const taskConstants: IConstructTask[] = [
     ],
   },
   {
-    id: "3",
+    id: uuidv4(),
     name: "Roof Installation",
     description: "Install trusses and roofing materials.",
     status: "in-progress",
@@ -64,7 +65,7 @@ export const taskConstants: IConstructTask[] = [
     updatedAt: "2024-06-01T08:20:00Z",
     checklist: [
       {
-        id: "1",
+        id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
         status: { id: "pending", name: "Pending" },
         iconID: "lampwork",
@@ -73,7 +74,7 @@ export const taskConstants: IConstructTask[] = [
     ],
   },
   {
-    id: "4",
+    id: uuidv4(),
     name: "Electrical Wiring",
     description: "Run electrical wiring and install panels/outlets.",
     status: "completed",
@@ -83,7 +84,7 @@ export const taskConstants: IConstructTask[] = [
     updatedAt: "2024-06-01T08:30:00Z",
     checklist: [
       {
-        id: "1",
+        id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
         status: { id: "pending", name: "Pending" },
         iconID: "lampwork",
@@ -92,7 +93,7 @@ export const taskConstants: IConstructTask[] = [
     ],
   },
   {
-    id: "5",
+    id: uuidv4(),
     name: "Interior Finishing",
     description: "Install drywall, paint, and complete interior finishes.",
     status: "pending",
@@ -102,7 +103,7 @@ export const taskConstants: IConstructTask[] = [
     updatedAt: "2024-06-01T08:40:00Z",
     checklist: [
       {
-        id: "1",
+        id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
         status: { id: "pending", name: "Pending" },
         iconID: "lampwork",

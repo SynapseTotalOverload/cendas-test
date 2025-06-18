@@ -1,4 +1,4 @@
-import type { TConstructIconID, TConstructStatuses } from "@/types/construct-task";
+import type { TChecklistStatuses, TConstructIconID, TConstructStatuses } from "@/types/construct-task";
 import { Lightbulb, Zap, Droplet, Paintbrush, Hammer, Building, Layers, AppWindowMac, Sun } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Group, Circle, Path, Rect, Ellipse } from "react-konva";
@@ -74,6 +74,26 @@ export function getTaskColor(status: TConstructStatuses) {
       return "#d7cb1e";
     case "completed":
       return "#05c91f";
+    default:
+      return "#6a6a6a";
+  }
+}
+export function getChecklistStatusColor(status: TChecklistStatuses) {
+  switch (status) {
+    case "blocked":
+      return "#dc2626";
+    case "pending":
+      return "#f7402f";
+    case "in-progress":
+      return "#d7cb1e";
+    case "completed":
+      return "#05c91f";
+    case "not-applicable":
+      return "#9371a6";
+    case "not-started":
+      return "#a84444";
+    case "not-required":
+      return "#47be4b";
     default:
       return "#6a6a6a";
   }

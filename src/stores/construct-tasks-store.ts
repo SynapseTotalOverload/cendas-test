@@ -1,7 +1,7 @@
 import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
-import type { IConstructTask } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses } from "@/types/construct-task";
 
 type TConstructTasksState = {
   tasks: Record<string, IConstructTask>;
@@ -14,7 +14,10 @@ type TConstructTasksActions = {
   updateTask: (task: IConstructTask) => void;
   deleteTask: (id: string) => void;
   setTasks: (tasks: IConstructTask[]) => void;
+  updateChecklistItem: (taskID: string, checklistItem: IChecklistItem) => void;
+  updateChecklistItemStatus: (taskID: string, checklistItemID: string, status: TChecklistStatuses) => void;
   clearTasks: () => void;
+  deleteChecklistItem: (taskID: string, checklistItemID: string) => void;
 };
 
 export const useConstructTasksStore = createStore(
@@ -45,6 +48,40 @@ export const useConstructTasksStore = createStore(
           return { tasks: tasksMap };
         }),
       clearTasks: () => set({ tasks: {} }),
+      updateChecklistItem: (taskID: string, checklistItem: IChecklistItem) =>
+        set(state => ({
+          tasks: {
+            ...state.tasks,
+            [taskID]: {
+              ...state.tasks[taskID],
+              checklist: state.tasks[taskID].checklist.map(item =>
+                item.id === checklistItem.id ? checklistItem : item,
+              ),
+            },
+          },
+        })),
+      updateChecklistItemStatus: (taskID: string, checklistItemID: string, status: TChecklistStatuses) =>
+        set(state => ({
+          tasks: {
+            ...state.tasks,
+            [taskID]: {
+              ...state.tasks[taskID],
+              checklist: state.tasks[taskID].checklist.map(item =>
+                item.id === checklistItemID ? { ...item, status: { id: status, name: status } } : item,
+              ),
+            },
+          },
+        })),
+      deleteChecklistItem: (taskID: string, checklistItemID: string) =>
+        set(state => ({
+          tasks: {
+            ...state.tasks,
+            [taskID]: {
+              ...state.tasks[taskID],
+              checklist: state.tasks[taskID].checklist.filter(item => item.id !== checklistItemID),
+            },
+          },
+        })),
     })),
   ),
 );

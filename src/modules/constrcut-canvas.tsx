@@ -6,10 +6,13 @@ import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { icons } from "lucide";
 import { getTaskColor, getTaskIconText, renderSvgToKonvaReact } from "@/lib/helpers";
-import type { IConstructTask } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses } from "@/types/construct-task";
 import { useBoolean } from "@/hooks/use-boolean";
 import { TaskPopover } from "@/modules/task-popover";
 import Konva from "konva";
+import { CheckItemDialog } from "./dialogs/checkitem-dialog";
+import type { editChecklistItemSchema } from "@/schemas/edit-schemas";
+import type { z } from "zod";
 
 interface ConstructCanvasProps {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -17,12 +20,14 @@ interface ConstructCanvasProps {
 
 export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { tasks } = useConstructTasksStore.getState();
+  const { tasks, updateChecklistItemStatus, deleteChecklistItem, updateChecklistItem } =
+    useConstructTasksStore.getState();
   const formattedTasks = Object?.values(tasks) || [];
   const [selectedTask, setSelectedTask] = useState<IConstructTask | null>(null);
   const { isBool, changeBool } = useBoolean();
   const [popoverPos, setPopoverPos] = useState<{ x: number; y: number } | null>(null);
   const stageRef = useRef<KonvaStage>(null);
+  const [editChecklistItem, setEditChecklistItem] = useState<IChecklistItem | null>(null);
   const { imageElement, imageSize, stageSize, scale, setScale, position, setPosition, handleImageUpload } =
     useKonvaCanvas({ containerRef });
 
@@ -32,7 +37,6 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
       handleImageUpload(file);
     }
   };
-
   const handleWheel = (e: any) => {
     e.evt.preventDefault();
     changeBool(selectedTask?.id || "", false);
@@ -93,6 +97,44 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
     });
   };
 
+  const handleChecklistItemUpdate = (status: TChecklistStatuses, checklistItem: IChecklistItem) => {
+    updateChecklistItemStatus(selectedTask?.id || "", checklistItem.id, status);
+    setSelectedTask(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        checklist: prev.checklist.map(item =>
+          item.id === checklistItem.id ? { ...item, status: { id: status, name: status } } : item,
+        ),
+      };
+    });
+  };
+  const handleChecklistItemDialogSubmit = (data: z.infer<typeof editChecklistItemSchema>) => {
+    const updatedChecklistItem = {
+      ...editChecklistItem,
+      name: data.checklistItemName,
+      description: data.checklistItemDescription,
+      status: { id: data.checklistItemStatus, name: data.checklistItemStatus },
+    };
+    updateChecklistItem(selectedTask?.id || "", updatedChecklistItem as IChecklistItem);
+    changeBool(editChecklistItem?.id || "", false);
+    changeBool(selectedTask?.id || "", false);
+  };
+
+  const handleChecklistItemDelete = (checklistItem: IChecklistItem) => {
+    deleteChecklistItem(selectedTask?.id || "", checklistItem.id);
+    setSelectedTask(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        checklist: prev.checklist.filter(item => item.id !== checklistItem.id),
+      };
+    });
+  };
+  const handleChecklistItemEdit = (checklistItem: IChecklistItem) => {
+    changeBool(checklistItem.id, true);
+    setEditChecklistItem(checklistItem);
+  };
   return (
     <>
       <Stage
@@ -146,6 +188,19 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
         task={selectedTask as IConstructTask}
         anchorX={popoverPos?.x || 0}
         anchorY={popoverPos?.y || 0}
+        onChecklistItemUpdate={handleChecklistItemUpdate}
+        onChecklistItemEdit={handleChecklistItemEdit}
+        onChecklistItemDelete={handleChecklistItemDelete}
+      />
+      <CheckItemDialog
+        open={isBool(editChecklistItem?.id || "")}
+        onOpenChange={(open: boolean) => {
+          changeBool(editChecklistItem?.id || "", open);
+          setEditChecklistItem(null);
+          changeBool(selectedTask?.id || "", false);
+        }}
+        onSubmit={handleChecklistItemDialogSubmit}
+        data={editChecklistItem as IChecklistItem}
       />
     </>
   );
