@@ -1,7 +1,6 @@
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { useState, useEffect } from "react";
 import { taskConstants } from "@/constants/task-constants";
-import type { IConstructTask } from "@/types/construct-task";
 
 interface UseKonvaCanvasProps {
   containerRef?: React.RefObject<HTMLDivElement>;

@@ -1,7 +1,7 @@
 import { CollapsibleDataTable } from "@/components/ui/collapsible-data-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { IConstructTask } from "@/types/construct-task";
-import { Badge } from "@/components/ui/badge";
+
 import { getTaskIcon, getTaskStatus } from "@/lib/helpers";
 import { taskConstants } from "@/constants/task-constants";
 
@@ -52,7 +52,15 @@ export default function ConstructTableView() {
       <CollapsibleDataTable
         columns={columns}
         data={tasks}
-        renderExpandedContent={row => <div className="bg-gray-300 p-4">{row.original.description}</div>}
+        renderExpandedContent={row => (
+          <div className="bg-gray-300 p-4">
+            {row.original.checklist.map(item => (
+              <div key={item.id}>
+                {item.name} + {item.description} + {item.status.name}
+              </div>
+            ))}
+          </div>
+        )}
       />
     </div>
   );
