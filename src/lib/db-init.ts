@@ -4,6 +4,7 @@ import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 
 addRxPlugin(RxDBDevModePlugin);
+
 const constructTaskSchema = {
   title: "construct-task",
   description: "Schema for a construct task with checklist",
@@ -77,6 +78,30 @@ const constructTaskSchema = {
   indexes: ["status", "createdAt", "updatedAt"],
 };
 
+const userSchema = {
+  title: "user",
+  description: "Schema for a single user with authentication",
+  version: 0,
+  primaryKey: "id",
+  type: "object",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    username: {
+      type: "string",
+      maxLength: 255,
+    },
+    token: {
+      type: "string",
+      maxLength: 500,
+    },
+  },
+  required: ["id", "username", "token"],
+  indexes: ["username", "token"],
+};
+
 export async function createDatabase() {
   const storage = wrappedValidateAjvStorage({
     storage: getRxStorageMemory(),
@@ -93,6 +118,9 @@ export async function createDatabase() {
   await db.addCollections({
     constructTasks: {
       schema: constructTaskSchema,
+    },
+    user: {
+      schema: userSchema,
     },
   });
 
