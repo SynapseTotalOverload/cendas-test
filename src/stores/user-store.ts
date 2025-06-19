@@ -2,7 +2,7 @@ import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
 import type { IUser } from "@/types/user";
-import { userSchema, type CreateUserInput, type LoginUserInput, type UpdateUserInput } from "@/schemas/user-schemas";
+import { type CreateUserInput, type UpdateUserInput } from "@/schemas/user-schemas";
 
 type TUserState = {
   users: IUser[];

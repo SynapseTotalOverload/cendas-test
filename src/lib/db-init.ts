@@ -2,6 +2,7 @@ import { createRxDatabase, addRxPlugin } from "rxdb";
 import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
+import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";
 
 addRxPlugin(RxDBDevModePlugin);
 
@@ -98,8 +99,8 @@ const userSchema = {
       maxLength: 500,
     },
   },
-  required: ["id", "username"],
-  indexes: ["username", "token"],
+  required: ["id", "username", "token"],
+  indexes: ["username"],
 };
 
 const activeUserSchema = {
@@ -130,13 +131,13 @@ const activeUserSchema = {
       maxLength: 30, // ISO date string
     },
   },
-  required: ["id", "userId", "username"],
+  required: ["id", "userId", "username", "token"],
   indexes: ["userId", "username"],
 };
 
 export async function createDatabase() {
   const storage = wrappedValidateAjvStorage({
-    storage: getRxStorageMemory(),
+    storage: getRxStorageDexie(),
   });
 
   const db = await createRxDatabase({

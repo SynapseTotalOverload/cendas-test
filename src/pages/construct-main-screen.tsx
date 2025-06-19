@@ -65,7 +65,10 @@ const ConstructMainScreen = () => {
             variant="secondary"
             size="icon"
             className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-            onClick={() => logoutUser(activeUser?.username || "")}>
+            onClick={() => {
+              logoutUser(activeUser?.username || "");
+              navigate("/login");
+            }}>
             <LogOut className="w-6 h-6" />
           </Button>
           <Button

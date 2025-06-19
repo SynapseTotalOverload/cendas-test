@@ -12,12 +12,15 @@ let syncingActiveUserFromZustand = false;
 let syncingActiveUserFromRxDB = false;
 
 export async function syncZustandToRxDB(db: RxDatabase) {
+  await revealRxDBState(db);
   const constructTasksCollection = db.constructTasks;
   const usersCollection = db.users;
   const activeUserCollection = db.activeUser;
 
   tasks$.subscribe(async tasks => {
+    await revealRxDBState(db);
     if (syncingFromRxDB) return; // skip if change came from RxDB sync
+    console.log("[Zustand->RxDB] Synced tasks:", tasks.length);
 
     syncingFromZustand = true;
     try {
@@ -36,8 +39,9 @@ export async function syncZustandToRxDB(db: RxDatabase) {
 
     syncingUsersFromZustand = true;
     try {
+      console.log("[Zustand->RxDB] Synced users:", users.length);
       // Clear existing users and add all current ones
-      await usersCollection.remove();
+      await usersCollection.find().remove();
 
       if (users.length > 0) {
         const insertPromises = users.map(user => usersCollection.insert(user));
@@ -54,8 +58,9 @@ export async function syncZustandToRxDB(db: RxDatabase) {
 
     syncingActiveUserFromZustand = true;
     try {
+      console.log("[Zustand->RxDB] Synced active user:", activeUser);
       // Clear existing active user
-      await activeUserCollection.remove();
+      await activeUserCollection.find().remove();
 
       if (activeUser) {
         const activeUserDoc = {
@@ -66,7 +71,7 @@ export async function syncZustandToRxDB(db: RxDatabase) {
           lastLoginAt: new Date().toISOString(),
         };
 
-        await activeUserCollection.insert(activeUserDoc);
+        await activeUserCollection.upsert(activeUserDoc);
         console.log("Synced active user to RxDB:", activeUser.username);
       } else {
         console.log("Cleared active user from RxDB");
@@ -82,52 +87,94 @@ export function syncRxDBToZustand(db: RxDatabase) {
   const usersCollection = db.users;
   const activeUserCollection = db.activeUser;
 
-  constructTasksCollection.find().$.subscribe(docs => {
-    if (syncingFromZustand) return; // skip if change came from Zustand sync
+  // Load initial tasks, then subscribe
+  (async () => {
+    const initialTasks = await constructTasksCollection.find().exec();
+    useConstructTasksStore.getState().setTasks(initialTasks.map(doc => doc.toJSON() as IConstructTask));
 
-    syncingFromRxDB = true;
-    try {
-      const tasks = docs.map(doc => doc.toJSON() as IConstructTask);
-      useConstructTasksStore.getState().setTasks(tasks);
-      console.log("Synced tasks from RxDB to Zustand:", tasks.length);
-    } finally {
-      syncingFromRxDB = false;
-    }
-  });
-
-  usersCollection.find().$.subscribe(docs => {
-    if (syncingUsersFromZustand) return; // skip if change came from Zustand sync
-
-    syncingUsersFromRxDB = true;
-    try {
-      const users = docs.map(doc => doc.toJSON() as IUser);
-      useUserStore.getState().setUsers(users);
-      console.log("Synced users from RxDB to Zustand:", users.length);
-    } finally {
-      syncingUsersFromRxDB = false;
-    }
-  });
-
-  activeUserCollection.find().$.subscribe(docs => {
-    if (syncingActiveUserFromZustand) return; // skip if change came from Zustand sync
-
-    syncingActiveUserFromRxDB = true;
-    try {
-      if (docs.length > 0) {
-        const activeUserDoc = docs[0].toJSON();
-        const activeUser: IUser = {
-          id: activeUserDoc.userId,
-          username: activeUserDoc.username,
-          token: activeUserDoc.token,
-        };
-        useUserStore.getState().setActiveUser(activeUser);
-        console.log("Synced active user from RxDB to Zustand:", activeUser.username);
-      } else {
-        useUserStore.getState().setActiveUser(null);
-        console.log("Synced active user from RxDB to Zustand: null");
+    constructTasksCollection.find().$.subscribe(docs => {
+      if (syncingFromZustand) return;
+      console.log("[RxDB->Zustand] Synced tasks:", docs.length);
+      syncingFromRxDB = true;
+      try {
+        const tasks = docs.map(doc => doc.toJSON() as IConstructTask);
+        useConstructTasksStore.getState().setTasks(tasks);
+        console.log("Synced tasks from RxDB to Zustand:", tasks.length);
+      } finally {
+        syncingFromRxDB = false;
       }
-    } finally {
-      syncingActiveUserFromRxDB = false;
+    });
+  })();
+
+  // Load initial users, then subscribe
+  (async () => {
+    const initialUsers = await usersCollection.find().exec();
+    useUserStore.getState().setUsers(initialUsers.map(doc => doc.toJSON() as IUser));
+
+    usersCollection.find().$.subscribe(docs => {
+      if (syncingUsersFromZustand) return;
+      console.log("[RxDB->Zustand] Synced users:", docs.length);
+      syncingUsersFromRxDB = true;
+      try {
+        const users = docs.map(doc => doc.toJSON() as IUser);
+        useUserStore.getState().setUsers(users);
+        console.log("Synced users from RxDB to Zustand:", users.length);
+      } finally {
+        syncingUsersFromRxDB = false;
+      }
+    });
+  })();
+
+  // Load initial active user, then subscribe
+  (async () => {
+    const initialActiveUserDocs = await activeUserCollection.find().exec();
+    if (initialActiveUserDocs.length > 0) {
+      const activeUserDoc = initialActiveUserDocs[0].toJSON();
+      useUserStore.getState().setActiveUser({
+        id: activeUserDoc.userId,
+        username: activeUserDoc.username,
+        token: activeUserDoc.token,
+      });
+    } else {
+      useUserStore.getState().setActiveUser(null);
     }
-  });
+
+    activeUserCollection.find().$.subscribe(docs => {
+      if (syncingActiveUserFromZustand) return;
+      console.log("[RxDB->Zustand] Synced active user:", docs.length);
+      syncingActiveUserFromRxDB = true;
+      try {
+        if (docs.length > 0) {
+          const activeUserDoc = docs[0].toJSON();
+          useUserStore.getState().setActiveUser({
+            id: activeUserDoc.userId,
+            username: activeUserDoc.username,
+            token: activeUserDoc.token,
+          });
+          console.log("Synced active user from RxDB to Zustand:", activeUserDoc.username);
+        } else {
+          useUserStore.getState().setActiveUser(null);
+          console.log("Synced active user from RxDB to Zustand: null");
+        }
+      } finally {
+        syncingActiveUserFromRxDB = false;
+      }
+    });
+  })();
+}
+
+export async function revealRxDBState(db: RxDatabase) {
+  const constructTasks = await db.constructTasks.find().exec();
+  const users = await db.users.find().exec();
+  const activeUserDocs = await db.activeUser.find().exec();
+
+  console.log(
+    "Current tasks in RxDB:",
+    constructTasks.map(doc => doc.toJSON()),
+  );
+  console.log(
+    "Current users in RxDB:",
+    users.map(doc => doc.toJSON()),
+  );
+  console.log("Current active user in RxDB:", activeUserDocs.length > 0 ? activeUserDocs[0].toJSON() : null);
 }
