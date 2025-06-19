@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/context-menu";
 import { getTaskColor, getTaskIcon } from "@/lib/helpers";
 import type { IChecklistItem, IConstructTask, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
-import { ChevronDownIcon, Edit, ArrowDownUp, Trash } from "lucide-react";
+import { ChevronDownIcon, Edit, ArrowDownUp, Trash, Plus } from "lucide-react";
 import { ChecklistItem } from "@/components/ui/checklist-item";
 
 interface TaskPopoverProps {
@@ -23,6 +23,7 @@ interface TaskPopoverProps {
   onChecklistItemUpdate: (status: TChecklistStatuses, checklistItem: IChecklistItem) => void;
   onChecklistItemDelete: (checklistItem: IChecklistItem) => void;
   onChecklistItemEdit: (checklistItem: IChecklistItem) => void;
+  onChecklistItemAdd: (task: IConstructTask) => void;
   onTaskEdit?: () => void;
   onTaskDelete?: () => void;
   onTaskStatusChange?: (status: TConstructStatuses) => void;
@@ -37,6 +38,7 @@ export function TaskPopover({
   onChecklistItemDelete,
   onChecklistItemUpdate,
   onChecklistItemEdit,
+  onChecklistItemAdd,
   onTaskEdit,
   onTaskDelete,
   onTaskStatusChange,
@@ -96,6 +98,13 @@ export function TaskPopover({
                           />
                         );
                       })}
+                      <div
+                        onClick={() => {
+                          onChecklistItemAdd(task);
+                        }}
+                        className="p-4 bg-white flex flex-row items-center gap-2 cursor-pointer hover:bg-gray-100">
+                        <Plus className="h-4 w-4" /> Add Checklist Item
+                      </div>
                     </CollapsibleContent>
                   </Collapsible>
                 </div>

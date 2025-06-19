@@ -79,6 +79,7 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
         } else {
           setPosition({ x: 0, y: 0 });
           setScale(1);
+          resetView();
         }
         onImageLoad?.(image);
       };

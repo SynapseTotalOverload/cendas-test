@@ -20,6 +20,7 @@ type TConstructTasksActions = {
   updateChecklistItemStatus: (taskID: string, checklistItemID: string, status: TChecklistStatuses) => void;
   clearTasks: () => void;
   deleteChecklistItem: (taskID: string, checklistItemID: string) => void;
+  addChecklistItem: (taskID: string, checklistItem: IChecklistItem) => void;
 };
 
 export const useConstructTasksStore = createStore(
@@ -86,6 +87,13 @@ export const useConstructTasksStore = createStore(
               ...state.tasks[taskID],
               checklist: state.tasks[taskID].checklist.filter(item => item.id !== checklistItemID),
             },
+          },
+        })),
+      addChecklistItem: (taskID: string, checklistItem: IChecklistItem) =>
+        set(state => ({
+          tasks: {
+            ...state.tasks,
+            [taskID]: { ...state.tasks[taskID], checklist: [...state.tasks[taskID].checklist, checklistItem] },
           },
         })),
     })),

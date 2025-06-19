@@ -38,7 +38,18 @@ export function getTaskIcon(iconID: TConstructIconID) {
       return <Building className="w-4 h-4" />;
     case "flooring":
       return <Layers className="w-4 h-4" />;
-
+    case "roofing":
+      return <Building className="w-4 h-4" />;
+    case "walling":
+      return <Building className="w-4 h-4" />;
+    case "ceiling":
+      return <Layers className="w-4 h-4" />;
+    case "doors":
+      return <AppWindowMac className="w-4 h-4" />;
+    case "windows":
+      return <AppWindowMac className="w-4 h-4" />;
+    case "other":
+      return <PenLine className="w-4 h-4" />;
     default:
       return <PenLine className="w-4 h-4" />;
   }
@@ -61,6 +72,18 @@ export function getTaskIconText(iconID: TConstructIconID) {
       return "Building";
     case "flooring":
       return "Layers";
+    case "roofing":
+      return "Building";
+    case "walling":
+      return "Building";
+    case "ceiling":
+      return "Layers";
+    case "doors":
+      return "AppWindowMac";
+    case "windows":
+      return "AppWindowMac";
+    case "other":
+      return "PenLine";
     default:
       return "PenLine";
   }

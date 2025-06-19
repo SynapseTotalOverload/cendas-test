@@ -75,6 +75,7 @@ const ConstructMainScreen = () => {
             className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
             onClick={() => {
               handleUploadSample();
+              
             }}>
             <Upload className="w-6 h-6" />
           </Button>
