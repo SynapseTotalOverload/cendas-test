@@ -6,7 +6,6 @@ import { LogOut, TableIcon, Upload } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ConstructCanvas } from "@/modules/constrcut-canvas";
 import { useUserStore } from "@/stores/user-store";
-import sampleImageUrl from "@/assets/image.png";
 
 const ConstructMainScreen = () => {
   const navigate = useNavigate();
@@ -65,15 +64,13 @@ const ConstructMainScreen = () => {
         </div>
       </div>
 
-      {imageElement && (
-        <SidebarTools
-          scale={scale}
-          onZoomIn={handleZoomIn}
-          onZoomOut={handleZoomOut}
-          onUpload={() => fileInputRef.current?.click()}
-          onReset={resetView}
-        />
-      )}
+      <SidebarTools
+        scale={scale}
+        onZoomIn={handleZoomIn}
+        onZoomOut={handleZoomOut}
+        onUpload={() => fileInputRef.current?.click()}
+        onReset={resetView}
+      />
     </div>
   );
 };
