@@ -6,6 +6,7 @@ import { LogOut, TableIcon, Upload } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ConstructCanvas } from "@/modules/constrcut-canvas";
 import { useUserStore } from "@/stores/user-store";
+import sampleImageUrl from "@/assets/image.png";
 
 const ConstructMainScreen = () => {
   const navigate = useNavigate();
@@ -30,20 +31,10 @@ const ConstructMainScreen = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
+    console.log("file", file);
     if (file) {
       handleImageUpload(file);
     }
-  };
-  const handleUploadSample = async () => {
-    const response = await fetch("/sample-image.webp");
-    const blob = await response.blob();
-
-    const file = new File([blob], "image.webp", { type: blob.type });
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    handleImageUpload(file);
   };
 
   return (
@@ -54,13 +45,6 @@ const ConstructMainScreen = () => {
 
         {/* Floating Buttons */}
         <div className="fixed bottom-6 right-6 flex gap-2">
-          <Button
-            variant="secondary"
-            size="icon"
-            className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-            onClick={handleUploadSample}>
-            <Upload className="w-6 h-6" />
-          </Button>
           <Button
             variant="secondary"
             size="icon"

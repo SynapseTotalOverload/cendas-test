@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Table, Kanban, TableIcon, MapPin, LogOut } from "lucide-react";
+import { Table, Kanban, TableIcon, MapPin, LogOut, Map } from "lucide-react";
 
 import { ConstructTableView } from "@/modules/table-view/construct-table-view";
 import { ConstructKanbanBoard } from "@/modules/kanban/construct-kanban-board";
@@ -65,8 +65,8 @@ export default function ConstructTablePage() {
           variant="secondary"
           size="icon"
           className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-          onClick={() => navigate("/table-view")}>
-          <TableIcon className="w-6 h-6" />
+          onClick={() => navigate("/")}>
+          <Map className="w-6 h-6" />
         </Button>
       </div>
     </div>

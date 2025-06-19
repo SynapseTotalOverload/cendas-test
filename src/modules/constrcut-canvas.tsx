@@ -37,6 +37,7 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
       handleImageUpload(file);
     }
   };
+
   const handleWheel = (e: any) => {
     e.evt.preventDefault();
     changeBool(selectedTask?.id || "", false);
