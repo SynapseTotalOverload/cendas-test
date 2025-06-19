@@ -1,5 +1,20 @@
 import type { TChecklistStatuses, TConstructIconID, TConstructStatuses } from "@/types/construct-task";
-import { Lightbulb, Zap, Droplet, Paintbrush, Hammer, Building, Layers, AppWindowMac, Sun } from "lucide-react";
+import {
+  Lightbulb,
+  Zap,
+  Droplet,
+  Paintbrush,
+  Hammer,
+  Building,
+  Layers,
+  AppWindowMac,
+  Sun,
+  Clock,
+  Ban,
+  CircleDot,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Group, Circle, Path, Rect, Ellipse } from "react-konva";
 import type Konva from "konva";
@@ -53,15 +68,15 @@ export function getTaskIconText(iconID: TConstructIconID) {
 export function getTaskStatus(status: TConstructStatuses) {
   switch (status) {
     case "awaiting":
-      return <Badge className="bg-yellow-500 text-white hover:bg-yellow-600">Awaiting</Badge>;
+      return <Badge className="bg-[#2618e9f4] text-white hover:bg-[#2618e9f4]">Awaiting</Badge>;
     case "pending":
-      return <Badge className="bg-blue-500 text-white hover:bg-blue-600">Pending</Badge>;
+      return <Badge className="bg-[#f7402f] text-white hover:bg-[#f7402f]">Pending</Badge>;
     case "in-progress":
-      return <Badge className="bg-green-500 text-white hover:bg-green-600">In Progress</Badge>;
+      return <Badge className="bg-[#d7cb1e] text-white hover:bg-[#d7cb1e]">In Progress</Badge>;
     case "completed":
-      return <Badge className="bg-green-500 text-white hover:bg-green-600">Completed</Badge>;
+      return <Badge className="bg-[#05c91f] text-white hover:bg-[#05c91f]">Completed</Badge>;
     default:
-      return <Badge className="bg-gray-500 text-white hover:bg-gray-600">Unknown</Badge>;
+      return <Badge className="bg-[#6a6a6a] text-white hover:bg-[#6a6a6a]">Unknown</Badge>;
   }
 }
 export function getTaskColor(status: TConstructStatuses) {
@@ -166,3 +181,30 @@ export function renderSvgToKonvaReact(
     </Group>
   );
 }
+
+export const statusStyles: Record<TChecklistStatuses, { color: string; icon: React.ReactNode }> = {
+  blocked: {
+    color: "text-red-600",
+    icon: <Ban className="w-4 h-4" />,
+  },
+  "in-progress": {
+    color: "text-gray-600",
+    icon: <Clock className="w-4 h-4" />,
+  },
+  "final-check": {
+    color: "text-blue-600",
+    icon: <CircleDot className="w-4 h-4" />,
+  },
+  awaiting: {
+    color: "text-green-600",
+    icon: <CheckCircle2 className="w-4 h-4" />,
+  },
+  done: {
+    color: "text-gray-400",
+    icon: <XCircle className="w-4 h-4" />,
+  },
+  "not-started": {
+    color: "text-gray-400",
+    icon: <Circle className="w-4 h-4" />,
+  },
+};

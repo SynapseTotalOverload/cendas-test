@@ -1,6 +1,6 @@
 import { Ban, Clock, CircleDot, CheckCircle2, XCircle, Circle, Edit, ArrowDownUp, Trash } from "lucide-react";
 import type { IChecklistItem, TChecklistStatuses, TConstructIconID, TConstructStatuses } from "@/types/construct-task";
-import { getChecklistStatusColor, getTaskColor } from "@/lib/helpers";
+import { getChecklistStatusColor, getTaskColor, statusStyles } from "@/lib/helpers";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -11,33 +11,6 @@ import {
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
 
-// Helper to map checklist statuses to colors and icons
-const statusStyles: Record<TChecklistStatuses, { color: string; icon: React.ReactNode }> = {
-  blocked: {
-    color: "text-red-600",
-    icon: <Ban className="w-4 h-4" />,
-  },
-  "in-progress": {
-    color: "text-gray-600",
-    icon: <Clock className="w-4 h-4" />,
-  },
-  "final-check": {
-    color: "text-blue-600",
-    icon: <CircleDot className="w-4 h-4" />,
-  },
-  awaiting: {
-    color: "text-green-600",
-    icon: <CheckCircle2 className="w-4 h-4" />,
-  },
-  done: {
-    color: "text-gray-400",
-    icon: <XCircle className="w-4 h-4" />,
-  },
-  "not-started": {
-    color: "text-gray-400",
-    icon: <Circle className="w-4 h-4" />,
-  },
-};
 
 export interface ChecklistItemProps extends IChecklistItem {
   onStatusChange: (status: TChecklistStatuses) => void;
@@ -50,7 +23,7 @@ export const ChecklistItem = ({ status, name, description, onStatusChange, onDel
   const icon = statusStyles[status.id as TChecklistStatuses]?.icon;
 
   return (
-    <ContextMenu>
+    <ContextMenu>\
       <ContextMenuTrigger>
         <div className="flex flex-row items-center space-x-2 border-t border-gray-200 p-4 gap-2">
           {icon}
