@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
@@ -12,6 +12,7 @@ const ConstructMainScreen = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [editMode, setEditMode] = useState(false);
   const { logoutUser, activeUser } = useUserStore.getState();
   const { scale, setScale, handleImageUpload, resetView, imageSize, stageSize, position, setPosition, imageElement } =
     useKonvaCanvas({ containerRef });
@@ -21,6 +22,10 @@ const ConstructMainScreen = () => {
     const MAX_SCALE = 3;
     const newScale = Math.min(MAX_SCALE, scale * SCALE_FACTOR);
     setScale(newScale);
+  };
+
+  const handleAddTask = () => {
+    setEditMode(true);
   };
 
   const handleZoomOut = () => {
@@ -57,6 +62,8 @@ const ConstructMainScreen = () => {
           imageSize={imageSize}
           stageSize={stageSize}
           scale={scale}
+          editMode={editMode}
+          setEditMode={setEditMode}
         />
         <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
 
@@ -94,9 +101,11 @@ const ConstructMainScreen = () => {
       <SidebarTools
         scale={scale}
         onZoomIn={handleZoomIn}
+        onAddTask={handleAddTask}
         onZoomOut={handleZoomOut}
         onUpload={() => fileInputRef.current?.click()}
         onReset={resetView}
+        editMode={editMode}
       />
     </div>
   );

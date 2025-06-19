@@ -14,6 +14,7 @@ import {
   CircleDot,
   CheckCircle2,
   XCircle,
+  PenLine,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Group, Circle, Path, Rect, Ellipse } from "react-konva";
@@ -39,7 +40,7 @@ export function getTaskIcon(iconID: TConstructIconID) {
       return <Layers className="w-4 h-4" />;
 
     default:
-      return <AppWindowMac className="w-4 h-4" />;
+      return <PenLine className="w-4 h-4" />;
   }
 }
 export function getTaskIconText(iconID: TConstructIconID) {
@@ -61,7 +62,7 @@ export function getTaskIconText(iconID: TConstructIconID) {
     case "flooring":
       return "Layers";
     default:
-      return "AppWindowMac";
+      return "PenLine";
   }
 }
 

@@ -5,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { icons } from "lucide";
 import { getTaskColor, getTaskIconText, renderSvgToKonvaReact } from "@/lib/helpers";
-import type { IChecklistItem, IConstructTask, TChecklistStatuses } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
 import { useBoolean } from "@/hooks/use-boolean";
 import { TaskPopover } from "@/modules/task-popover";
 import Konva from "konva";
 import { CheckItemDialog } from "./dialogs/checkitem-dialog";
 import type { editChecklistItemSchema } from "@/schemas/edit-schemas";
 import type { z } from "zod";
+import { v4 as uuidv4 } from "uuid";
 
 interface ConstructCanvasProps {
   containerRef: React.RefObject<HTMLDivElement>;
@@ -23,6 +24,8 @@ interface ConstructCanvasProps {
   setScale: (scale: number) => void;
   imageElement: HTMLImageElement | null;
   setPosition: (pos: { x: number; y: number }) => void;
+  editMode: boolean;
+  setEditMode: (editMode: boolean) => void;
 }
 
 export const ConstructCanvas = ({
@@ -34,10 +37,19 @@ export const ConstructCanvas = ({
   position,
   setPosition,
   imageElement,
+  editMode,
+  setEditMode,
 }: ConstructCanvasProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { tasks, updateChecklistItemStatus, deleteChecklistItem, updateChecklistItem } =
-    useConstructTasksStore.getState();
+  const {
+    tasks,
+    updateChecklistItemStatus,
+    deleteChecklistItem,
+    updateTaskStatus,
+    deleteTask,
+    updateChecklistItem,
+    addTask,
+  } = useConstructTasksStore.getState();
   const formattedTasks = Object?.values(tasks) || [];
   const [selectedTask, setSelectedTask] = useState<IConstructTask | null>(null);
   const { isBool, changeBool } = useBoolean();
@@ -71,7 +83,7 @@ export const ConstructCanvas = ({
 
     const scaleBy = e.evt.deltaY > 0 ? 1 / SCALE_FACTOR : SCALE_FACTOR;
     const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * scaleBy));
-    console.log("newScale", newScale);
+
     setScale(newScale);
 
     // Calculate new position to zoom into mouse pointer
@@ -90,6 +102,45 @@ export const ConstructCanvas = ({
     });
   };
 
+  const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
+    if (!editMode) return;
+
+    const stage = e.target.getStage();
+    if (!stage) return;
+
+    const pointerPos = stage.getPointerPosition();
+
+    if (!pointerPos) return;
+
+    // Convert pointer position to image coordinates
+    const imageX = (pointerPos.x - position.x) / scale;
+    const imageY = (pointerPos.y - position.y) / scale;
+
+    // Create a new default task
+    const newTask: IConstructTask = {
+      id: uuidv4(),
+      name: "New Task",
+      description: "Right click to edit this task",
+      status: "awaiting",
+      iconID: "other",
+      coordinates: { x: imageX, y: imageY },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      checklist: [
+        {
+          id: uuidv4(),
+          name: "Default checklist item",
+          description: "Edit this checklist item",
+          status: { id: "not-started", name: "Not Started" },
+          iconID: "other",
+        },
+      ],
+    };
+
+    addTask(newTask);
+    setEditMode(false); // Exit edit mode after creating task
+  };
+
   if (!imageElement) {
     return (
       <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -103,6 +154,8 @@ export const ConstructCanvas = ({
   }
 
   const handleTaskClick = (task: IConstructTask, e: Konva.KonvaEventObject<MouseEvent>) => {
+    if (editMode) return; // Don't open task popover in edit mode
+
     setSelectedTask(task);
     changeBool(task.id, true);
 
@@ -150,13 +203,32 @@ export const ConstructCanvas = ({
     changeBool(checklistItem.id, true);
     setEditChecklistItem(checklistItem);
   };
+
+  const handleTaskStatusChange = (status: TConstructStatuses) => {
+    updateTaskStatus(selectedTask?.id || "", status);
+    setSelectedTask(prev => {
+      if (!prev) return null;
+      return {
+        ...prev,
+        status: status,
+      };
+    });
+  };
+
+  const handleTaskEdit = () => {
+    setEditMode(true);
+  };
+  const handleTaskDelete = () => {
+    deleteTask(selectedTask?.id || "");
+  };
   return (
     <>
       <Stage
         width={stageSize?.width || 0}
         height={stageSize?.height || 0}
         onWheel={handleWheel}
-        draggable={scale > 1}
+        onClick={handleStageClick}
+        draggable={scale > 1 && !editMode}
         ref={stageRef}
         onDragMove={handleDragMove}
         x={position.x}
@@ -167,7 +239,7 @@ export const ConstructCanvas = ({
           position: "absolute",
           left: 0,
           top: 0,
-          cursor: scale > 1 ? "grab" : "default",
+          cursor: editMode ? "crosshair" : scale > 1 ? "grab" : "default",
           background: "transparent",
         }}>
         <Layer>
@@ -203,6 +275,9 @@ export const ConstructCanvas = ({
         task={selectedTask as IConstructTask}
         anchorX={popoverPos?.x || 0}
         anchorY={popoverPos?.y || 0}
+        onTaskStatusChange={handleTaskStatusChange}
+        onTaskEdit={handleTaskEdit}
+        onTaskDelete={handleTaskDelete}
         onChecklistItemUpdate={handleChecklistItemUpdate}
         onChecklistItemEdit={handleChecklistItemEdit}
         onChecklistItemDelete={handleChecklistItemDelete}

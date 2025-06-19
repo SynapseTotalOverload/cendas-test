@@ -8,7 +8,6 @@ import { ProtectedRoute } from "@/modules/protected-route";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
 import type { RxDatabase } from "rxdb";
-import { userSchema } from "@/schemas/user-schemas";
 
 let dbPromise: Promise<RxDatabase> | null = null;
 
@@ -27,10 +26,9 @@ export default function App() {
       if (!hydrationRef.current) {
         syncRxDBToZustand(db);
 
-        hydrationRef.current = true;
-      } else {
         syncZustandToRxDB(db);
       }
+      hydrationRef.current = true;
     })();
 
     // No subscription here if you don't need to react to changes in this component
