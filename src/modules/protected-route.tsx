@@ -3,7 +3,7 @@ import { Navigate } from "react-router";
 import { useUserStore } from "@/stores/user-store";
 
 export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = useUserStore.getState().user?.token;
+  const token = useUserStore.getState().activeUser?.token;
 
   if (!token) return <Navigate to="/login" replace />;
   return <>{children}</>;

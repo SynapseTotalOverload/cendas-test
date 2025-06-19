@@ -2,14 +2,16 @@ import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
-import { TableIcon } from "lucide-react";
+import { LogOut, TableIcon, Upload } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ConstructCanvas } from "@/modules/constrcut-canvas";
+import { useUserStore } from "@/stores/user-store";
 
 const ConstructMainScreen = () => {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { logoutUser, activeUser } = useUserStore.getState();
   const { imageElement, scale, setScale, handleImageUpload, resetView } = useKonvaCanvas({ containerRef });
 
   const handleZoomIn = () => {
@@ -32,6 +34,17 @@ const ConstructMainScreen = () => {
       handleImageUpload(file);
     }
   };
+  const handleUploadSample = async () => {
+    const response = await fetch("/sample-image.webp");
+    const blob = await response.blob();
+
+    const file = new File([blob], "image.webp", { type: blob.type });
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    handleImageUpload(file);
+  };
 
   return (
     <div className="flex h-[calc(100vh-4rem)] relative">
@@ -39,14 +52,30 @@ const ConstructMainScreen = () => {
         <ConstructCanvas containerRef={containerRef} />
         <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
 
-        {/* Floating Button */}
-        <Button
-          variant="secondary"
-          size="icon"
-          className="fixed bottom-6 right-6 w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-          onClick={() => navigate("/table-view")}>
-          <TableIcon className="w-6 h-6" />
-        </Button>
+        {/* Floating Buttons */}
+        <div className="fixed bottom-6 right-6 flex gap-2">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            onClick={handleUploadSample}>
+            <Upload className="w-6 h-6" />
+          </Button>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            onClick={() => logoutUser(activeUser?.username || "")}>
+            <LogOut className="w-6 h-6" />
+          </Button>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+            onClick={() => navigate("/table-view")}>
+            <TableIcon className="w-6 h-6" />
+          </Button>
+        </div>
       </div>
 
       {imageElement && (

@@ -8,6 +8,7 @@ type TUserState = {
   users: IUser[];
   activeUser: IUser | null;
 };
+const CUSTOM_TOKEN = "custom-token";
 
 type TUserActions = {
   // User management
@@ -20,7 +21,8 @@ type TUserActions = {
 
   // Active user management
   loginUser: (username: string) => IUser | null;
-  logoutUser: () => void;
+  logoutUser: (username: string) => void;
+  registerUser: (username: string) => IUser | null;
   setActiveUser: (user: IUser | null) => void;
   getActiveUser: () => IUser | null;
 
@@ -77,18 +79,41 @@ export const useUserStore = createStore(
       // Active user management
       loginUser: (username: string) => {
         const { users } = get();
-        const existingUser = users.find(user => user.username === username);
+        const existingUser = users.find(user => user?.username === username);
 
         if (existingUser) {
-          set({ activeUser: { ...existingUser, token: "custom-token" } });
-          return existingUser;
+          const updatedUser = { ...existingUser, token: CUSTOM_TOKEN };
+          set({ activeUser: updatedUser });
+          return updatedUser;
         } else {
           return null;
         }
       },
 
-      logoutUser: () => {
-        set({ activeUser: null });
+      logoutUser: (username: string) => {
+        const updatedUsers = get().users.map(user =>
+          user?.username === username ? { ...user, token: undefined } : user,
+        );
+
+        set({ users: updatedUsers, activeUser: null });
+      },
+
+      registerUser: (username: string) => {
+        const { users } = get();
+        const existingUser = users.find(user => user?.username === username);
+
+        if (existingUser) {
+          return null;
+        } else {
+          const newUser: IUser = {
+            id: crypto.randomUUID(),
+            username: username,
+            token: CUSTOM_TOKEN,
+          };
+
+          set({ users: [...users, newUser] });
+          return newUser;
+        }
       },
 
       setActiveUser: (user: IUser | null) => {

@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useUserStore } from "@/stores/user-store";
 
 // Define the form schema with zod
@@ -24,8 +24,8 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
   const { loginUser } = useUserStore.getState();
+  const navigate = useNavigate();
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,29 +38,16 @@ export default function LoginPage() {
 
     try {
       // Simulate API call
-      await new Promise(resolve =>
+      const result = loginUser(data.username);
+      if (result) {
         setTimeout(() => {
-          loginUser(data.username);
-          resolve(true);
-        }, 1000),
-      );
-
-      // Here you would typically make an API call to authenticate the user
-      console.log("Login attempt with username:", data.username);
-
-      toast({
-        title: "Login successful!",
-        description: `Welcome back, ${data.username}!`,
-      });
-
-      // You can redirect here or update your app state
-      // navigate('/dashboard');
+          navigate("/");
+        }, 1000);
+      } else {
+        form.setError("username", { message: "No user found with this username, please register first" });
+      }
     } catch (error) {
-      toast({
-        title: "Login failed",
-        description: "Please try again with a valid username.",
-        variant: "destructive",
-      });
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

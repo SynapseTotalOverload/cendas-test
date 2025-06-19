@@ -18,12 +18,10 @@ export interface ChecklistItemProps extends IChecklistItem {
 }
 
 export const ChecklistItem = ({ status, name, description, onStatusChange, onDelete, onEdit }: ChecklistItemProps) => {
-  console.log(status.id, statusStyles[status.id]);
   const icon = statusStyles[status.id as TChecklistStatuses]?.icon;
 
   return (
     <ContextMenu>
-      \
       <ContextMenuTrigger>
         <div className="flex flex-row items-center space-x-2 border-t border-gray-200 p-4 gap-2">
           {icon}

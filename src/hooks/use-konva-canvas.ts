@@ -89,7 +89,6 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
     };
     reader.readAsDataURL(file);
   };
-
   const resetImage = () => {
     setImageElement(null);
     setImageSize(null);

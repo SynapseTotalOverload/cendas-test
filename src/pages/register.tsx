@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { useUserStore } from "@/stores/user-store";
 
 // Define the form schema with zod
 const registerSchema = z.object({
@@ -23,8 +24,8 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-
+  const { registerUser } = useUserStore.getState();
+  const navigate = useNavigate();
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -37,24 +38,18 @@ export default function RegisterPage() {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = registerUser(data.username);
 
-      // Here you would typically make an API call to register the user
-      console.log("Registration attempt with username:", data.username);
-
-      toast({
-        title: "Registration successful!",
-        description: `Welcome, ${data.username}! Your account has been created.`,
-      });
+      if (result) {
+        navigate("/");
+      } else {
+        form.setError("username", { message: "Username already exists" });
+      }
 
       // You can redirect here or update your app state
       // navigate('/dashboard');
     } catch (error) {
-      toast({
-        title: "Registration failed",
-        description: "Please try again with a different username.",
-        variant: "destructive",
-      });
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
