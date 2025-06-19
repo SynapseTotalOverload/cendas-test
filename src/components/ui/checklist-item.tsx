@@ -1,6 +1,6 @@
-import { Ban, Clock, CircleDot, CheckCircle2, XCircle, Circle, Edit, ArrowDownUp, Trash } from "lucide-react";
-import type { IChecklistItem, TChecklistStatuses, TConstructIconID, TConstructStatuses } from "@/types/construct-task";
-import { getChecklistStatusColor, getTaskColor, statusStyles } from "@/lib/helpers";
+import { Edit, ArrowDownUp, Trash } from "lucide-react";
+import type { IChecklistItem, TChecklistStatuses } from "@/types/construct-task";
+import { getChecklistStatusColor, statusStyles } from "@/lib/helpers";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -10,7 +10,6 @@ import {
   ContextMenuTrigger,
   ContextMenuSubContent,
 } from "@/components/ui/context-menu";
-
 
 export interface ChecklistItemProps extends IChecklistItem {
   onStatusChange: (status: TChecklistStatuses) => void;
@@ -23,7 +22,8 @@ export const ChecklistItem = ({ status, name, description, onStatusChange, onDel
   const icon = statusStyles[status.id as TChecklistStatuses]?.icon;
 
   return (
-    <ContextMenu>\
+    <ContextMenu>
+      \
       <ContextMenuTrigger>
         <div className="flex flex-row items-center space-x-2 border-t border-gray-200 p-4 gap-2">
           {icon}

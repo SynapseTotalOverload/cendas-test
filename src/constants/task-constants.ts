@@ -112,3 +112,11 @@ export const taskConstants: IConstructTask[] = [
     ],
   },
 ];
+
+export const taskConstantsObj: Record<string, IConstructTask> = taskConstants.reduce(
+  (acc, task) => {
+    acc[task.id] = task;
+    return acc;
+  },
+  {} as Record<string, IConstructTask>,
+);

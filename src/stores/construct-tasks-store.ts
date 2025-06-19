@@ -1,7 +1,8 @@
 import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
-import type { IChecklistItem, IConstructTask, TChecklistStatuses } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
+import { taskConstantsObj } from "@/constants/task-constants";
 
 type TConstructTasksState = {
   tasks: Record<string, IConstructTask>;
@@ -12,6 +13,7 @@ type TConstructTasksActions = {
   getTask: (id: string) => IConstructTask | undefined;
   getFormattedTasks: () => IConstructTask[];
   updateTask: (task: IConstructTask) => void;
+  updateTaskStatus: (id: string, status: TConstructStatuses) => void;
   deleteTask: (id: string) => void;
   setTasks: (tasks: IConstructTask[]) => void;
   updateChecklistItem: (taskID: string, checklistItem: IChecklistItem) => void;
@@ -22,7 +24,7 @@ type TConstructTasksActions = {
 
 export const useConstructTasksStore = createStore(
   subscribeWithSelector(
-    combine<TConstructTasksState, TConstructTasksActions>({ tasks: {} }, (set, get) => ({
+    combine<TConstructTasksState, TConstructTasksActions>({ tasks: taskConstantsObj }, (set, get) => ({
       addTask: (task: IConstructTask) =>
         set(state => ({
           tasks: { ...state.tasks, [task.id]: task },
@@ -32,6 +34,10 @@ export const useConstructTasksStore = createStore(
       updateTask: (task: IConstructTask) =>
         set(state => ({
           tasks: { ...state.tasks, [task.id]: task },
+        })),
+      updateTaskStatus: (id: string, status: TConstructStatuses) =>
+        set(state => ({
+          tasks: { ...state.tasks, [id]: { ...state.tasks[id], status } },
         })),
       deleteTask: (id: string) =>
         set(state => {
