@@ -82,18 +82,16 @@ export function getChecklistStatusColor(status: TChecklistStatuses) {
   switch (status) {
     case "blocked":
       return "#dc2626";
-    case "pending":
-      return "#f7402f";
     case "in-progress":
       return "#d7cb1e";
-    case "completed":
+    case "final-check":
       return "#05c91f";
-    case "not-applicable":
+    case "awaiting":
       return "#9371a6";
+    case "done":
+      return "#00a405";
     case "not-started":
       return "#a84444";
-    case "not-required":
-      return "#47be4b";
     default:
       return "#6a6a6a";
   }

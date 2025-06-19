@@ -1,12 +1,5 @@
 export type TConstructStatuses = "awaiting" | "pending" | "in-progress" | "completed";
-export type TChecklistStatuses =
-  | "blocked"
-  | "pending"
-  | "in-progress"
-  | "completed"
-  | "not-applicable"
-  | "not-started"
-  | "not-required";
+export type TChecklistStatuses = "not-started" | "in-progress" | "blocked" | "final-check" | "awaiting" | "done";
 
 export type TConstructIconID =
   | "lampwork"

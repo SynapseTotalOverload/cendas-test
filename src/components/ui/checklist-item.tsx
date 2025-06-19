@@ -1,16 +1,5 @@
-import {
-  Ban,
-  Clock,
-  CircleDot,
-  CheckCircle2,
-  XCircle,
-  Circle,
-  CircleSlash,
-  Edit,
-  ArrowDownUp,
-  Trash,
-} from "lucide-react";
-import type { IChecklistItem, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
+import { Ban, Clock, CircleDot, CheckCircle2, XCircle, Circle, Edit, ArrowDownUp, Trash } from "lucide-react";
+import type { IChecklistItem, TChecklistStatuses, TConstructIconID, TConstructStatuses } from "@/types/construct-task";
 import { getChecklistStatusColor, getTaskColor } from "@/lib/helpers";
 import {
   ContextMenu,
@@ -28,29 +17,25 @@ const statusStyles: Record<TChecklistStatuses, { color: string; icon: React.Reac
     color: "text-red-600",
     icon: <Ban className="w-4 h-4" />,
   },
-  pending: {
+  "in-progress": {
     color: "text-gray-600",
     icon: <Clock className="w-4 h-4" />,
   },
-  "in-progress": {
+  "final-check": {
     color: "text-blue-600",
     icon: <CircleDot className="w-4 h-4" />,
   },
-  completed: {
+  awaiting: {
     color: "text-green-600",
     icon: <CheckCircle2 className="w-4 h-4" />,
   },
-  "not-applicable": {
+  done: {
     color: "text-gray-400",
     icon: <XCircle className="w-4 h-4" />,
   },
   "not-started": {
     color: "text-gray-400",
     icon: <Circle className="w-4 h-4" />,
-  },
-  "not-required": {
-    color: "text-gray-300",
-    icon: <CircleSlash className="w-4 h-4" />,
   },
 };
 
@@ -61,7 +46,8 @@ export interface ChecklistItemProps extends IChecklistItem {
 }
 
 export const ChecklistItem = ({ status, name, description, onStatusChange, onDelete, onEdit }: ChecklistItemProps) => {
-  const icon = statusStyles[status.id as TChecklistStatuses].icon;
+  console.log(status.id, statusStyles[status.id]);
+  const icon = statusStyles[status.id as TChecklistStatuses]?.icon;
 
   return (
     <ContextMenu>
@@ -70,14 +56,16 @@ export const ChecklistItem = ({ status, name, description, onStatusChange, onDel
           {icon}
           <div className="flex flex-col w-full">
             <div className="flex flex-col">
-              <span style={{ color: getTaskColor(status.id as TConstructStatuses) }} className="text-xs font-medium">
+              <span
+                style={{ color: getChecklistStatusColor(status.id as TChecklistStatuses) }}
+                className="text-xs font-medium">
                 {name}
               </span>
               <span className="text-xs text-gray-500">{description}</span>
             </div>
             <div className="flex flex-row items-center space-x-2">
               <span className="text-xs text-gray-500">Status:</span>
-              <span style={{ color: getTaskColor(status.id as TConstructStatuses) }} className="text-xs">
+              <span style={{ color: getChecklistStatusColor(status.id as TChecklistStatuses) }} className="text-xs">
                 {status.name}
               </span>
             </div>
@@ -94,9 +82,9 @@ export const ChecklistItem = ({ status, name, description, onStatusChange, onDel
           </ContextMenuSubTrigger>
           <ContextMenuSubContent>
             <ContextMenuItem
-              style={{ color: getChecklistStatusColor("pending") }}
-              onClick={() => onStatusChange("pending")}>
-              Pending
+              style={{ color: getChecklistStatusColor("not-started") }}
+              onClick={() => onStatusChange("not-started")}>
+              Not Started
             </ContextMenuItem>
             <ContextMenuItem
               style={{ color: getChecklistStatusColor("in-progress") }}
@@ -104,24 +92,17 @@ export const ChecklistItem = ({ status, name, description, onStatusChange, onDel
               In Progress
             </ContextMenuItem>
             <ContextMenuItem
-              style={{ color: getChecklistStatusColor("completed") }}
-              onClick={() => onStatusChange("completed")}>
-              Completed
+              style={{ color: getChecklistStatusColor("final-check") }}
+              onClick={() => onStatusChange("final-check")}>
+              Final Check
             </ContextMenuItem>
             <ContextMenuItem
-              style={{ color: getChecklistStatusColor("not-applicable") }}
-              onClick={() => onStatusChange("not-applicable")}>
-              Not Applicable
+              style={{ color: getChecklistStatusColor("awaiting") }}
+              onClick={() => onStatusChange("awaiting")}>
+              Awaiting
             </ContextMenuItem>
-            <ContextMenuItem
-              style={{ color: getChecklistStatusColor("not-started") }}
-              onClick={() => onStatusChange("not-started")}>
-              Not Started
-            </ContextMenuItem>
-            <ContextMenuItem
-              style={{ color: getChecklistStatusColor("not-required") }}
-              onClick={() => onStatusChange("not-required")}>
-              Not Required
+            <ContextMenuItem style={{ color: getChecklistStatusColor("done") }} onClick={() => onStatusChange("done")}>
+              Done
             </ContextMenuItem>
             <ContextMenuItem
               style={{ color: getChecklistStatusColor("blocked") }}

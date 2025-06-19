@@ -61,15 +61,7 @@ const constructTaskSchema = {
             properties: {
               id: {
                 type: "string",
-                enum: [
-                  "blocked",
-                  "pending",
-                  "in-progress",
-                  "completed",
-                  "not-applicable",
-                  "not-started",
-                  "not-required",
-                ],
+                enum: ["not-started", "in-progress", "blocked", "final-check", "awaiting", "done"],
                 maxLength: 20,
               },
               name: { type: "string" },

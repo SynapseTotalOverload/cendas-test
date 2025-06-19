@@ -23,8 +23,8 @@ export function CheckItemDialog({ onSubmit, open, onOpenChange, data }: CheckIte
     defaultValues: {
       checklistItemName: data?.name || "",
       checklistItemDescription: data?.description || "",
-      checklistItemStatus: data?.status?.id || "pending",
-      checklistItemStatusName: data?.status?.name || "Pending",
+      checklistItemStatus: data?.status?.id || "not-started",
+      checklistItemStatusName: data?.status?.name || "Not Started",
     },
   });
 
@@ -34,8 +34,8 @@ export function CheckItemDialog({ onSubmit, open, onOpenChange, data }: CheckIte
       form.reset({
         checklistItemName: data.name || "",
         checklistItemDescription: data.description || "",
-        checklistItemStatus: data.status?.id || "pending",
-        checklistItemStatusName: data.status?.name || "Pending",
+        checklistItemStatus: data.status?.id || "not-started",
+        checklistItemStatusName: data.status?.name || "Not Started",
       });
     }
   }, [data]);
@@ -89,12 +89,11 @@ export function CheckItemDialog({ onSubmit, open, onOpenChange, data }: CheckIte
                         <SelectValue placeholder="Select a status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="in-progress">In Progress</SelectItem>
-                        <SelectItem value="completed">Completed</SelectItem>
-                        <SelectItem value="not-applicable">Not Applicable</SelectItem>
                         <SelectItem value="not-started">Not Started</SelectItem>
-                        <SelectItem value="not-required">Not Required</SelectItem>
+                        <SelectItem value="in-progress">In Progress</SelectItem>
+                        <SelectItem value="final-check">Final Check</SelectItem>
+                        <SelectItem value="awaiting">Awaiting</SelectItem>
+                        <SelectItem value="done">Done</SelectItem>
                         <SelectItem value="blocked">Blocked</SelectItem>
                       </SelectContent>
                     </Select>

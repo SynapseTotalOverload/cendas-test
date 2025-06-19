@@ -15,14 +15,14 @@ export const taskConstants: IConstructTask[] = [
       {
         id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
-        status: { id: "pending", name: "Pending" },
+        status: { id: "in-progress", name: "In Progress" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
       {
         id: uuidv4(),
         name: "Install reinforcement steel",
-        status: { id: "completed", name: "Completed" },
+        status: { id: "final-check", name: "Final Check" },
         iconID: "lampwork",
         description: "Install reinforcement steel",
       },
@@ -41,14 +41,14 @@ export const taskConstants: IConstructTask[] = [
       {
         id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
-        status: { id: "pending", name: "Pending" },
+        status: { id: "in-progress", name: "In Progress" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
       {
         id: uuidv4(),
         name: "Install reinforcement steel",
-        status: { id: "completed", name: "Completed" },
+        status: { id: "final-check", name: "Final Check" },
         iconID: "lampwork",
         description: "Install reinforcement steel",
       },
@@ -67,7 +67,7 @@ export const taskConstants: IConstructTask[] = [
       {
         id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
-        status: { id: "pending", name: "Pending" },
+        status: { id: "in-progress", name: "In Progress" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
@@ -86,7 +86,7 @@ export const taskConstants: IConstructTask[] = [
       {
         id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
-        status: { id: "pending", name: "Pending" },
+        status: { id: "in-progress", name: "In Progress" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
@@ -105,7 +105,7 @@ export const taskConstants: IConstructTask[] = [
       {
         id: uuidv4(),
         name: "Excavate and pour concrete for the building foundation.",
-        status: { id: "pending", name: "Pending" },
+        status: { id: "in-progress", name: "In Progress" },
         iconID: "lampwork",
         description: "Excavate and pour concrete for the building foundation.",
       },
