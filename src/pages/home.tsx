@@ -4,6 +4,9 @@ import { useEffect } from "react";
 import { createDatabase } from "@/lib/db-init";
 import { syncZustandToRxDB, syncRxDBToZustand } from "@/lib/sync-db";
 import ConstructTableView from "./construct-table-view";
+import { ProtectedRoute } from "@/modules/protected-route";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
 
 export default function App() {
   useEffect(() => {
@@ -20,8 +23,24 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ConstructMainScreen />} />
-        <Route path="/table-view" element={<ConstructTableView />} />
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <ConstructMainScreen />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/table-view"
+          element={
+            <ProtectedRoute>
+              <ConstructTableView />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

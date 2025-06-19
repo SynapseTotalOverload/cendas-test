@@ -98,8 +98,40 @@ const userSchema = {
       maxLength: 500,
     },
   },
-  required: ["id", "username", "token"],
+  required: ["id", "username"],
   indexes: ["username", "token"],
+};
+
+const activeUserSchema = {
+  title: "active-user",
+  description: "Schema for tracking the currently active user",
+  version: 0,
+  primaryKey: "id",
+  type: "object",
+  properties: {
+    id: {
+      type: "string",
+      maxLength: 100,
+    },
+    userId: {
+      type: "string",
+      maxLength: 100,
+    },
+    username: {
+      type: "string",
+      maxLength: 255,
+    },
+    token: {
+      type: "string",
+      maxLength: 500,
+    },
+    lastLoginAt: {
+      type: "string",
+      maxLength: 30, // ISO date string
+    },
+  },
+  required: ["id", "userId", "username"],
+  indexes: ["userId", "username"],
 };
 
 export async function createDatabase() {
@@ -119,8 +151,11 @@ export async function createDatabase() {
     constructTasks: {
       schema: constructTaskSchema,
     },
-    user: {
+    users: {
       schema: userSchema,
+    },
+    activeUser: {
+      schema: activeUserSchema,
     },
   });
 
