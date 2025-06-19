@@ -11,7 +11,7 @@ interface SidebarToolsProps {
 
 export function SidebarTools({ onZoomIn, onZoomOut, onUpload, onReset, scale }: SidebarToolsProps) {
   return (
-    <div className="w-[60px] h-full bg-background border-l flex flex-col items-center py-4 gap-2">
+    <div className="w-[60px] h-full bg-background border-l flex flex-col items-center py-4 gap-2 relative z-50">
       <div className="flex flex-col gap-2">
         <Button variant="ghost" size="icon" onClick={onZoomIn} title="Zoom In">
           <ZoomIn className="h-5 w-5" />

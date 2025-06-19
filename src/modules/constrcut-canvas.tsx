@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import type { Stage as KonvaStage } from "konva/lib/Stage";
 import { Stage, Layer, Image } from "react-konva";
 import { Button } from "@/components/ui/button";
-import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
 import { icons } from "lucide";
 import { getTaskColor, getTaskIconText, renderSvgToKonvaReact } from "@/lib/helpers";
@@ -16,9 +15,26 @@ import type { z } from "zod";
 
 interface ConstructCanvasProps {
   containerRef: React.RefObject<HTMLDivElement>;
+  handleImageUpload: (file: File) => void;
+  imageSize: { width: number; height: number } | null;
+  stageSize: { width: number; height: number } | null;
+  position: { x: number; y: number };
+  scale: number;
+  setScale: (scale: number) => void;
+  imageElement: HTMLImageElement | null;
+  setPosition: (pos: { x: number; y: number }) => void;
 }
 
-export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
+export const ConstructCanvas = ({
+  handleImageUpload,
+  imageSize,
+  stageSize,
+  scale,
+  setScale,
+  position,
+  setPosition,
+  imageElement,
+}: ConstructCanvasProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { tasks, updateChecklistItemStatus, deleteChecklistItem, updateChecklistItem } =
     useConstructTasksStore.getState();
@@ -28,8 +44,6 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
   const [popoverPos, setPopoverPos] = useState<{ x: number; y: number } | null>(null);
   const stageRef = useRef<KonvaStage>(null);
   const [editChecklistItem, setEditChecklistItem] = useState<IChecklistItem | null>(null);
-  const { imageElement, imageSize, stageSize, scale, setScale, position, setPosition, handleImageUpload } =
-    useKonvaCanvas({ containerRef });
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -52,12 +66,12 @@ export const ConstructCanvas = ({ containerRef }: ConstructCanvasProps) => {
     };
 
     const SCALE_FACTOR = 1.1;
-    const MIN_SCALE = 1;
+    const MIN_SCALE = 0.5;
     const MAX_SCALE = 3;
 
     const scaleBy = e.evt.deltaY > 0 ? 1 / SCALE_FACTOR : SCALE_FACTOR;
     const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale * scaleBy));
-
+    console.log("newScale", newScale);
     setScale(newScale);
 
     // Calculate new position to zoom into mouse pointer
