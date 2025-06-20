@@ -142,21 +142,7 @@ export function TaskDialog({ onSubmit, open, onOpenChange, data }: TaskDialogPro
                         <SelectItem value="flooring">
                           <div className="flex items-center gap-2">{getTaskIcon("flooring")} Flooring</div>
                         </SelectItem>
-                        <SelectItem value="roofing">
-                          <div className="flex items-center gap-2">{getTaskIcon("roofing")} Roofing</div>
-                        </SelectItem>
-                        <SelectItem value="walling">
-                          <div className="flex items-center gap-2">{getTaskIcon("walling")} Walling</div>
-                        </SelectItem>
-                        <SelectItem value="ceiling">
-                          <div className="flex items-center gap-2">{getTaskIcon("ceiling")} Ceiling</div>
-                        </SelectItem>
-                        <SelectItem value="doors">
-                          <div className="flex items-center gap-2">{getTaskIcon("doors")} Doors</div>
-                        </SelectItem>
-                        <SelectItem value="windows">
-                          <div className="flex items-center gap-2">{getTaskIcon("windows")} Windows</div>
-                        </SelectItem>
+
                         <SelectItem value="other">
                           <div className="flex items-center gap-2">{getTaskIcon("other")} Other</div>
                         </SelectItem>
