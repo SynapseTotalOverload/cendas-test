@@ -4,11 +4,17 @@ import type { IConstructTask, TChecklistStatuses } from "@/types/construct-task"
 
 import { getTaskIcon, getTaskStatus, getChecklistStatusColor, statusStyles } from "@/lib/helpers";
 
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
+import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Menu } from "lucide-react";
+
 interface ConstructTableViewProps {
   tasks: IConstructTask[];
+  handleEdit: (task: IConstructTask) => void;
+  handleDelete: (task: IConstructTask) => void;
 }
 
-export function ConstructTableView({ tasks }: ConstructTableViewProps) {
+export function ConstructTableView({ tasks, handleEdit, handleDelete }: ConstructTableViewProps) {
   const columns: ColumnDef<IConstructTask>[] = [
     {
       header: "Icon",
@@ -42,6 +48,35 @@ export function ConstructTableView({ tasks }: ConstructTableViewProps) {
     {
       header: "Actions",
       accessorKey: "actions",
+      cell: ({ row }) => {
+        return (
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Menu />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleEdit(row.original);
+                    }}>
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleDelete(row.original);
+                    }}>
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        );
+      },
     },
   ];
 
