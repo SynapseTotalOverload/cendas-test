@@ -7,7 +7,6 @@ import {
   Hammer,
   Building,
   Layers,
-  AppWindowMac,
   Sun,
   Clock,
   Ban,

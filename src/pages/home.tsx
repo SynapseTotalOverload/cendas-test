@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router"; // note react-route
 import ConstructMainScreen from "./construct-main-screen";
 import { useEffect, useRef } from "react";
 import { createDatabase } from "@/lib/db-init";
-import { syncZustandToRxDB, syncRxDBToZustand, destroyDatabase } from "@/lib/sync-db";
+import { syncZustandToRxDB, syncRxDBToZustand } from "@/lib/sync-db";
 import ConstructTableView from "./construct-table-view";
 import { ProtectedRoute } from "@/modules/protected-route";
 import Login from "@/pages/login";

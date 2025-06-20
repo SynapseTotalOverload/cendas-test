@@ -6,7 +6,7 @@ import { getTaskIcon, getTaskStatus, getChecklistStatusColor, statusStyles } fro
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { EllipsisVertical, Menu } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 
 interface ConstructTableViewProps {
   tasks: IConstructTask[];

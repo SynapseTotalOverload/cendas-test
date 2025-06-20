@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
-import { FileUp, LogOut, TableIcon, Upload } from "lucide-react";
+import { FileUp, LogOut, TableIcon } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ConstructCanvas } from "@/modules/constrcut-canvas";
 import { useUserStore } from "@/stores/user-store";

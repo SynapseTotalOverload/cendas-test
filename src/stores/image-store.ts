@@ -1,4 +1,3 @@
-import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
 import { create } from "zustand";
