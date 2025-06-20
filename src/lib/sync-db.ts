@@ -4,12 +4,12 @@ import type { RxDatabase } from "rxdb";
 import type { IConstructTask } from "@/types/construct-task";
 import type { IUser } from "@/types/user";
 
-let syncingFromZustand = false;
-let syncingFromRxDB = false;
-let syncingUsersFromZustand = false;
-let syncingUsersFromRxDB = false;
-let syncingActiveUserFromZustand = false;
-let syncingActiveUserFromRxDB = false;
+export let syncingFromZustand = false;
+export let syncingFromRxDB = false;
+export let syncingUsersFromZustand = false;
+export let syncingUsersFromRxDB = false;
+export let syncingActiveUserFromZustand = false;
+export let syncingActiveUserFromRxDB = false;
 
 export async function syncZustandToRxDB(db: RxDatabase) {
   await revealRxDBState(db);
