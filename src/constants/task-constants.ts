@@ -1,9 +1,13 @@
 import type { IConstructTask } from "@/types/construct-task";
 import { v4 as uuidv4 } from "uuid";
 
+// Фиксированный ID пользователя для демо-данных
+const DEMO_USER_ID = "demo-user-123";
+
 export const taskConstants: IConstructTask[] = [
   {
     id: uuidv4(),
+    userId: DEMO_USER_ID,
     name: "Foundation Work",
     description: "Excavate and pour concrete for the building foundation.",
     status: "pending",
@@ -30,6 +34,7 @@ export const taskConstants: IConstructTask[] = [
   },
   {
     id: uuidv4(),
+    userId: DEMO_USER_ID,
     name: "Framing",
     description: "Construct the structural framework for walls and floors.",
     status: "awaiting",
@@ -56,6 +61,7 @@ export const taskConstants: IConstructTask[] = [
   },
   {
     id: uuidv4(),
+    userId: DEMO_USER_ID,
     name: "Roof Installation",
     description: "Install trusses and roofing materials.",
     status: "in-progress",
@@ -75,6 +81,7 @@ export const taskConstants: IConstructTask[] = [
   },
   {
     id: uuidv4(),
+    userId: DEMO_USER_ID,
     name: "Electrical Wiring",
     description: "Run electrical wiring and install panels/outlets.",
     status: "completed",
@@ -94,6 +101,7 @@ export const taskConstants: IConstructTask[] = [
   },
   {
     id: uuidv4(),
+    userId: DEMO_USER_ID,
     name: "Interior Finishing",
     description: "Install drywall, paint, and complete interior finishes.",
     status: "pending",

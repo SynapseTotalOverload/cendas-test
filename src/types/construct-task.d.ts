@@ -19,6 +19,7 @@ export type TConstructIconID =
 
 export interface IConstructTask {
   id: string;
+  userId: string;
   name: string;
   description: string;
   status: TConstructStatuses;

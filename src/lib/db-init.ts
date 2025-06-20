@@ -12,26 +12,16 @@ const constructTaskSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: {
-      type: "string",
-      maxLength: 100,
-    },
-    name: {
-      type: "string",
-      maxLength: 255,
-    },
-    description: {
-      type: "string",
-    },
+    id: { type: "string", maxLength: 100 },
+    userId: { type: "string", maxLength: 100 }, // Added
+    name: { type: "string", maxLength: 255 },
+    description: { type: "string" },
     status: {
       type: "string",
       enum: ["awaiting", "pending", "in-progress", "completed"],
       maxLength: 20,
     },
-    iconID: {
-      type: "string",
-      maxLength: 100,
-    },
+    iconID: { type: "string", maxLength: 100 },
     coordinates: {
       type: "object",
       properties: {
@@ -40,14 +30,8 @@ const constructTaskSchema = {
       },
       required: ["x", "y"],
     },
-    createdAt: {
-      type: "string",
-      maxLength: 30, // ISO date string
-    },
-    updatedAt: {
-      type: "string",
-      maxLength: 30, // ISO date string
-    },
+    createdAt: { type: "string", maxLength: 30 },
+    updatedAt: { type: "string", maxLength: 30 },
     checklist: {
       type: "array",
       items: {
@@ -74,8 +58,25 @@ const constructTaskSchema = {
       },
     },
   },
-  required: ["id", "name", "description", "status", "iconID", "coordinates", "createdAt", "updatedAt", "checklist"],
-  indexes: ["status", "createdAt", "updatedAt"],
+  required: [
+    "id",
+    "userId", // Added to required
+    "name",
+    "description",
+    "status",
+    "iconID",
+    "coordinates",
+    "createdAt",
+    "updatedAt",
+    "checklist",
+  ],
+  indexes: [
+    "status",
+    "createdAt",
+    "updatedAt",
+    "userId", // Added for filtering by user
+    ["userId", "status"], // Composite index for queries like "tasks by user & status"
+  ],
 };
 
 const userSchema = {
@@ -85,18 +86,9 @@ const userSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: {
-      type: "string",
-      maxLength: 100,
-    },
-    username: {
-      type: "string",
-      maxLength: 255,
-    },
-    token: {
-      type: "string",
-      maxLength: 500,
-    },
+    id: { type: "string", maxLength: 100 },
+    username: { type: "string", maxLength: 255 },
+    token: { type: "string", maxLength: 500, nullable: true },
   },
   required: ["id", "username", "token"],
   indexes: ["username"],
@@ -109,26 +101,11 @@ const activeUserSchema = {
   primaryKey: "id",
   type: "object",
   properties: {
-    id: {
-      type: "string",
-      maxLength: 100,
-    },
-    userId: {
-      type: "string",
-      maxLength: 100,
-    },
-    username: {
-      type: "string",
-      maxLength: 255,
-    },
-    token: {
-      type: "string",
-      maxLength: 500,
-    },
-    lastLoginAt: {
-      type: "string",
-      maxLength: 30, // ISO date string
-    },
+    id: { type: "string", maxLength: 100 },
+    userId: { type: "string", maxLength: 100 },
+    username: { type: "string", maxLength: 255, nullable: true },
+    token: { type: "string", maxLength: 500 },
+    lastLoginAt: { type: "string", maxLength: 30 },
   },
   required: ["id", "userId", "username", "token"],
   indexes: ["userId", "username"],

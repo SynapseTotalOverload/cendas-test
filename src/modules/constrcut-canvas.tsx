@@ -27,6 +27,7 @@ interface ConstructCanvasProps {
   setPosition: (pos: { x: number; y: number }) => void;
   editMode: boolean;
   setEditMode: (editMode: boolean) => void;
+  activeUser: { id: string } | null;
 }
 
 export const ConstructCanvas = ({
@@ -40,6 +41,7 @@ export const ConstructCanvas = ({
   imageElement,
   editMode,
   setEditMode,
+  activeUser,
 }: ConstructCanvasProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
@@ -106,7 +108,7 @@ export const ConstructCanvas = ({
   };
 
   const handleStageClick = (e: Konva.KonvaEventObject<MouseEvent>) => {
-    if (!editMode) return;
+    if (!editMode || !activeUser) return;
 
     const stage = e.target.getStage();
     if (!stage) return;
@@ -119,9 +121,10 @@ export const ConstructCanvas = ({
     const imageX = (pointerPos.x - position.x) / scale;
     const imageY = (pointerPos.y - position.y) / scale;
 
-    // Create a new default task
+    // Create a new default task with userId
     const newTask: IConstructTask = {
       id: uuidv4(),
+      userId: activeUser.id,
       name: "New Task",
       description: "Right click to edit this task",
       status: "awaiting",

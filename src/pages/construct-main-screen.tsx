@@ -65,6 +65,7 @@ const ConstructMainScreen = () => {
           scale={scale}
           editMode={editMode}
           setEditMode={setEditMode}
+          activeUser={activeUser}
         />
         <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" ref={fileInputRef} />
 

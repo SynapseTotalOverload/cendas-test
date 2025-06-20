@@ -3,6 +3,7 @@ import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
 import type { IUser } from "@/types/user";
 import { type CreateUserInput, type UpdateUserInput } from "@/schemas/user-schemas";
+import { useConstructTasksStore } from "./construct-tasks-store";
 
 type TUserState = {
   users: IUser[];
@@ -96,6 +97,7 @@ export const useUserStore = createStore(
         );
 
         set({ users: updatedUsers, activeUser: null });
+        useConstructTasksStore.getState().clearTasks();
       },
 
       registerUser: (username: string) => {
