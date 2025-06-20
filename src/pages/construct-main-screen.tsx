@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useKonvaCanvas } from "@/hooks/use-konva-canvas";
 import { SidebarTools } from "@/components/ui/sidebar-tools";
-import { LogOut, TableIcon, Upload } from "lucide-react";
+import { FileUp, LogOut, TableIcon, Upload } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ConstructCanvas } from "@/modules/constrcut-canvas";
 import { useUserStore } from "@/stores/user-store";
@@ -79,7 +79,7 @@ const ConstructMainScreen = () => {
               handleUploadSample();
             }}
             title="Upload Sample">
-            <Upload className="w-6 h-6" />
+            <FileUp className="w-6 h-6" />
           </Button>
           <Button
             variant="secondary"

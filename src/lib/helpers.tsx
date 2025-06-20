@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   XCircle,
   PenLine,
+  CircleIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Group, Circle, Path, Rect, Ellipse } from "react-konva";
@@ -211,6 +212,10 @@ export const statusStyles: Record<TChecklistStatuses, { color: string; icon: Rea
     color: "text-red-600",
     icon: <Ban className="w-4 h-4" />,
   },
+  "not-started": {
+    color: "text-gray-400",
+    icon: <CircleIcon className="w-4 h-4" />,
+  },
   "in-progress": {
     color: "text-gray-600",
     icon: <Clock className="w-4 h-4" />,
@@ -226,9 +231,5 @@ export const statusStyles: Record<TChecklistStatuses, { color: string; icon: Rea
   done: {
     color: "text-gray-400",
     icon: <XCircle className="w-4 h-4" />,
-  },
-  "not-started": {
-    color: "text-gray-400",
-    icon: <Circle className="w-4 h-4" />,
   },
 };

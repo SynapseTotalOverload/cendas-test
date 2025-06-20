@@ -19,7 +19,7 @@ export interface ChecklistItemProps extends IChecklistItem {
 
 export const ChecklistItem = ({ status, name, description, onStatusChange, onDelete, onEdit }: ChecklistItemProps) => {
   const icon = statusStyles[status.id as TChecklistStatuses]?.icon;
-
+  console.log(status.id, statusStyles[status.id as TChecklistStatuses]);
   return (
     <ContextMenu>
       <ContextMenuTrigger>

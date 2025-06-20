@@ -77,10 +77,11 @@ export async function syncZustandToRxDB(db: RxDatabase) {
         };
 
         await activeUserCollection.upsert(activeUserDoc);
+        updateUserTasks(db, activeUser.id);
         console.log("Synced active user to RxDB:", activeUser.username);
       } else {
         await activeUserCollection.find().remove();
-        syncingFromRxDB = true;
+
         console.log("Cleared active user from RxDB");
       }
     } finally {
@@ -172,9 +173,11 @@ export function syncRxDBToZustand(db: RxDatabase) {
             username: activeUserDoc.username,
             token: activeUserDoc.token,
           });
+
           console.log("Synced active user from RxDB to Zustand:", activeUserDoc.username);
         } else {
           useUserStore.getState().setActiveUser(null);
+
           console.log("Synced active user from RxDB to Zustand: null");
         }
       } finally {
@@ -242,6 +245,13 @@ export async function destroyDatabase(db: RxDatabase) {
     console.error("❌ Error destroying database:", error);
     throw error;
   }
+}
+
+export async function updateUserTasks(db: RxDatabase, userId: string) {
+  const tasks = await getTasksByUserId(db, userId);
+  console.log("Updating user tasks:", tasks.length);
+  useConstructTasksStore.getState().setTasks(tasks);
+  return tasks;
 }
 
 export async function revealRxDBState(db: RxDatabase) {

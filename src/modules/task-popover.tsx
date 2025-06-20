@@ -80,24 +80,26 @@ export function TaskPopover({
                         <ChevronDownIcon className="w-4 h-4" />
                       </div>
                     </CollapsibleTrigger>
-                    <CollapsibleContent className="flex flex-col gap-2 first:border-t border-gray-200">
-                      {task.checklist.map(item => {
-                        return (
-                          <ChecklistItem
-                            key={item.id}
-                            {...item}
-                            onStatusChange={status => {
-                              onChecklistItemUpdate(status, item);
-                            }}
-                            onDelete={() => {
-                              onChecklistItemDelete(item);
-                            }}
-                            onEdit={() => {
-                              onChecklistItemEdit(item);
-                            }}
-                          />
-                        );
-                      })}
+                    <CollapsibleContent className="flex flex-col gap-2 ">
+                      <div className="flex flex-col gap-2 first:border-t border-gray-200 max-h-[200px] overflow-y-scroll">
+                        {task.checklist.map(item => {
+                          return (
+                            <ChecklistItem
+                              key={item.id}
+                              {...item}
+                              onStatusChange={status => {
+                                onChecklistItemUpdate(status, item);
+                              }}
+                              onDelete={() => {
+                                onChecklistItemDelete(item);
+                              }}
+                              onEdit={() => {
+                                onChecklistItemEdit(item);
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
                       <div
                         onClick={() => {
                           onChecklistItemAdd(task);
