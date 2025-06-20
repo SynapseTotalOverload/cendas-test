@@ -80,6 +80,7 @@ export async function syncZustandToRxDB(db: RxDatabase) {
         console.log("Synced active user to RxDB:", activeUser.username);
       } else {
         await activeUserCollection.find().remove();
+        syncingFromRxDB = true;
         console.log("Cleared active user from RxDB");
       }
     } finally {
@@ -247,7 +248,14 @@ export async function revealRxDBState(db: RxDatabase) {
   const constructTasks = await db.constructTasks.find().exec();
   const users = await db.users.find().exec();
   const activeUserDocs = await db.activeUser.find().exec();
-
+  console.log(
+    syncingFromRxDB,
+    syncingFromZustand,
+    syncingUsersFromRxDB,
+    syncingUsersFromZustand,
+    syncingActiveUserFromRxDB,
+    syncingActiveUserFromZustand,
+  );
   console.log(
     "Current tasks in RxDB:",
     constructTasks.map(doc => doc.toJSON()),

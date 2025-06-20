@@ -262,7 +262,7 @@ export const ConstructCanvas = ({
         height={stageSize?.height || 0}
         onWheel={handleWheel}
         onClick={handleStageClick}
-        draggable={scale > 1 && !editMode}
+        draggable={scale > 0.4 && !editMode}
         ref={stageRef}
         onDragMove={handleDragMove}
         x={position.x}
@@ -273,7 +273,7 @@ export const ConstructCanvas = ({
           position: "absolute",
           left: 0,
           top: 0,
-          cursor: editMode ? "crosshair" : scale > 1 ? "grab" : "default",
+          cursor: editMode ? "crosshair" : scale > 0.4 ? "grab" : "default",
           background: "transparent",
         }}>
         <Layer>
