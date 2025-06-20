@@ -13,7 +13,7 @@ const ConstructMainScreen = () => {
   const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [editMode, setEditMode] = useState(false);
-  const { logoutUser, activeUser } = useUserStore.getState();
+  const { logoutUser, activeUser } = useUserStore();
   const { scale, setScale, handleImageUpload, resetView, imageSize, stageSize, position, setPosition, imageElement } =
     useKonvaCanvas({ containerRef });
 

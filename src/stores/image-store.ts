@@ -1,6 +1,7 @@
 import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
+import { create } from "zustand";
 
 type TImageState = {
   savedImages: Record<
@@ -72,7 +73,7 @@ type TImageActions = {
   importImageFromFile: (file: File) => Promise<string>;
 };
 
-export const useImageStore = createStore(
+export const useImageStore = create(
   subscribeWithSelector(
     combine<TImageState, TImageActions>({ savedImages: {}, currentImageId: null }, (set, get) => ({
       // Image management

@@ -1,20 +1,30 @@
 import { CollapsibleDataTable } from "@/components/ui/collapsible-data-table";
 import type { ColumnDef } from "@tanstack/react-table";
-import type { IConstructTask, TChecklistStatuses } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses } from "@/types/construct-task";
 
 import { getTaskIcon, getTaskStatus, getChecklistStatusColor, statusStyles } from "@/lib/helpers";
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuGroup } from "@/components/ui/dropdown-menu";
 import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
-import { Menu } from "lucide-react";
+import { EllipsisVertical, Menu } from "lucide-react";
 
 interface ConstructTableViewProps {
   tasks: IConstructTask[];
   handleEdit: (task: IConstructTask) => void;
   handleDelete: (task: IConstructTask) => void;
+  handleCheckListEdit: (task: IConstructTask, checklistItem: IChecklistItem) => void;
+  handleCheckListDelete: (taskId: string, checklistItem: IChecklistItem) => void;
+  handleAddChecklistItem: (task: IConstructTask) => void;
 }
 
-export function ConstructTableView({ tasks, handleEdit, handleDelete }: ConstructTableViewProps) {
+export function ConstructTableView({
+  tasks,
+  handleEdit,
+  handleDelete,
+  handleCheckListEdit,
+  handleCheckListDelete,
+  handleAddChecklistItem,
+}: ConstructTableViewProps) {
   const columns: ColumnDef<IConstructTask>[] = [
     {
       header: "Icon",
@@ -46,17 +56,24 @@ export function ConstructTableView({ tasks, handleEdit, handleDelete }: Construc
       },
     },
     {
-      header: "Actions",
+      header: "",
       accessorKey: "actions",
       cell: ({ row }) => {
         return (
-          <div>
+          <div className="flex items-center justify-end gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Menu />
+                <EllipsisVertical />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
                 <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleAddChecklistItem(row.original);
+                    }}>
+                    Add Checklist Item
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={e => {
                       e.stopPropagation();
@@ -103,7 +120,7 @@ export function ConstructTableView({ tasks, handleEdit, handleDelete }: Construc
                     <div className="text-xs text-gray-500 truncate">{item.description}</div>
                   </div>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 flex items-center gap-2">
                   <span
                     className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium"
                     style={{
@@ -112,6 +129,31 @@ export function ConstructTableView({ tasks, handleEdit, handleDelete }: Construc
                     }}>
                     {item.status.name}
                   </span>
+                  <div className="flex items-center gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <EllipsisVertical />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="start">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleCheckListEdit(row.original, item);
+                            }}>
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={e => {
+                              e.stopPropagation();
+                              handleCheckListDelete(row.original.id, item);
+                            }}>
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </div>
               </div>
             ))}

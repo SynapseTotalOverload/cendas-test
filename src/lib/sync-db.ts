@@ -111,12 +111,7 @@ export function syncRxDBToZustand(db: RxDatabase) {
         const currentUser = useUserStore.getState().activeUser;
 
         const filteredTasks = currentUser ? docs.filter(doc => doc.get("userId") === currentUser.id) : [];
-        console.log(
-          filteredTasks,
-          activeUser?.id,
-          filteredTasks.map(doc => doc.get("userId")),
-          "checking trash",
-        );
+
         const tasks = filteredTasks.map(doc => doc.toJSON() as IConstructTask);
         useConstructTasksStore.getState().setTasks(tasks);
         console.log(
@@ -258,14 +253,7 @@ export async function revealRxDBState(db: RxDatabase) {
   const constructTasks = await db.constructTasks.find().exec();
   const users = await db.users.find().exec();
   const activeUserDocs = await db.activeUser.find().exec();
-  console.log(
-    syncingFromRxDB,
-    syncingFromZustand,
-    syncingUsersFromRxDB,
-    syncingUsersFromZustand,
-    syncingActiveUserFromRxDB,
-    syncingActiveUserFromZustand,
-  );
+
   console.log(
     "Current tasks in RxDB:",
     constructTasks.map(doc => doc.toJSON()),

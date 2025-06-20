@@ -1,4 +1,4 @@
-import { createStore } from "zustand/vanilla";
+import { create } from "zustand";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
 import type { IChecklistItem, IConstructTask, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
@@ -26,7 +26,7 @@ type TConstructTasksActions = {
   addChecklistItem: (taskID: string, checklistItem: IChecklistItem) => void;
 };
 
-export const useConstructTasksStore = createStore(
+export const useConstructTasksStore = create(
   subscribeWithSelector(
     combine<TConstructTasksState, TConstructTasksActions>({ tasks: taskConstantsObj }, (set, get) => ({
       addTask: (task: IConstructTask) =>

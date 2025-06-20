@@ -1,9 +1,9 @@
-import { createStore } from "zustand/vanilla";
 import { combine, subscribeWithSelector } from "zustand/middleware";
 import { toStream } from "@/lib/zustand-utils";
 import type { IUser } from "@/types/user";
 import { type CreateUserInput, type UpdateUserInput } from "@/schemas/user-schemas";
 import { useConstructTasksStore } from "./construct-tasks-store";
+import { create } from "zustand";
 
 type TUserState = {
   users: IUser[];
@@ -36,7 +36,7 @@ type TUserActions = {
   isUserLoggedIn: () => boolean;
 };
 
-export const useUserStore = createStore(
+export const useUserStore = create(
   subscribeWithSelector(
     combine<TUserState, TUserActions>({ users: [], activeUser: null }, (set, get) => ({
       // User management

@@ -54,7 +54,7 @@ export const ConstructCanvas = ({
     addTask,
     addChecklistItem,
     updateTask,
-  } = useConstructTasksStore.getState();
+  } = useConstructTasksStore();
   const formattedTasks = Object?.values(tasks) || [];
   const [selectedTask, setSelectedTask] = useState<IConstructTask | null>(null);
   const { isBool, changeBool } = useBoolean();

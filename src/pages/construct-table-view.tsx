@@ -4,40 +4,94 @@ import { Table, Kanban, LogOut, Map } from "lucide-react";
 import { ConstructTableView } from "@/modules/table-view/construct-table-view";
 import { ConstructKanbanBoard } from "@/modules/kanban/construct-kanban-board";
 import { useConstructTasksStore } from "@/stores/construct-tasks-store";
-import type { IConstructTask, TConstructStatuses } from "@/types/construct-task";
+import type { IChecklistItem, IConstructTask, TChecklistStatuses, TConstructStatuses } from "@/types/construct-task";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
 import { useUserStore } from "@/stores/user-store";
 import { useBoolean } from "@/hooks/use-boolean";
 import { TaskDialog } from "@/modules/dialogs/task-dialog";
-import { editTaskSchema } from "@/schemas/edit-schemas";
+import { editChecklistItemSchema, editTaskSchema } from "@/schemas/edit-schemas";
 import * as z from "zod";
+import { CheckItemDialog } from "@/modules/dialogs/checkitem-dialog";
+import { v4 as uuidv4 } from "uuid";
 export default function ConstructTablePage() {
-  const [viewMode, setViewMode] = useState<"table" | "kanban">("kanban");
+  const [viewMode, setViewMode] = useState<"table" | "kanban">("table");
   const navigate = useNavigate();
-  const [editTask, setEditTask] = useState<IConstructTask | null>(null);
-  const { updateTask, deleteTask } = useConstructTasksStore.getState();
+  const [selectedTask, setSelectedTask] = useState<IConstructTask | null>(null);
+
+  // Use hook consistently for all store access
+  const {
+    updateTask,
+    deleteTask,
+    deleteChecklistItem,
+    updateChecklistItem,
+    addChecklistItem,
+    tasks,
+    updateTaskStatus,
+  } = useConstructTasksStore();
+
   const { isBool, changeBool } = useBoolean();
-  const { tasks, updateTaskStatus } = useConstructTasksStore.getState();
-  const { logoutUser, activeUser } = useUserStore.getState();
+  const { logoutUser, activeUser } = useUserStore();
+  const [selectedChecklistItem, setSelectedChecklistItem] = useState<IChecklistItem | null>(null);
   const formattedTasks = Object.values(tasks);
   const handleUpdateTaskStatus = (id: string, status: TConstructStatuses) => {
     updateTaskStatus(id, status);
   };
+  console.log(tasks, 555);
 
   const handleEdit = (task: IConstructTask) => {
     changeBool(task.id, true);
-    setEditTask(task);
+    setSelectedTask(task);
   };
 
   const handleDelete = (task: IConstructTask) => {
     deleteTask(task.id);
   };
+  const handleCheckListDelete = (taskId: string, checklistItem: IChecklistItem) => {
+    deleteChecklistItem(taskId, checklistItem.id);
+  };
+  const handleCheckListEdit = (task: IConstructTask, checklistItem: IChecklistItem) => {
+    changeBool(checklistItem.id, true);
+    setSelectedTask(task);
+    setSelectedChecklistItem(checklistItem);
+  };
+
+  const handleSaveChecklistEdit = (data: z.infer<typeof editChecklistItemSchema>) => {
+    if (!selectedChecklistItem || !selectedTask) return;
+
+    updateChecklistItem(selectedTask?.id || "", {
+      ...selectedChecklistItem,
+      name: data.checklistItemName,
+      description: data.checklistItemDescription,
+      status: {
+        id: data.checklistItemStatus as TChecklistStatuses,
+        name: data.checklistItemStatus,
+      },
+    });
+    changeBool(selectedChecklistItem.id, false);
+    setSelectedTask(null);
+    setSelectedChecklistItem(null);
+  };
+
+  const handleAddChecklistItem = (task: IConstructTask) => {
+    const newChecklistItem: IChecklistItem = {
+      iconID: "checklist",
+      id: uuidv4(),
+      name: "New Checklist Item",
+      description: "New Checklist Item Description",
+      status: {
+        id: "not-started",
+        name: "Not Started",
+      },
+    };
+    addChecklistItem(task.id, newChecklistItem);
+  };
+
   const handleSaveEdit = (data: z.infer<typeof editTaskSchema>) => {
-    if (!editTask) return;
+    if (!selectedTask) return;
 
     updateTask({
-      ...editTask,
+      ...selectedTask,
       name: data.taskName,
       description: data.taskDescription,
       status: data.taskStatus,
@@ -48,8 +102,8 @@ export default function ConstructTablePage() {
       },
       updatedAt: new Date().toISOString(),
     });
-    changeBool(editTask?.id || "", false);
-    setEditTask(null);
+    changeBool(selectedTask?.id || "", false);
+    setSelectedTask(null);
   };
   return (
     <div className="flex flex-col gap-4 p-4">
@@ -79,7 +133,14 @@ export default function ConstructTablePage() {
       </div>
 
       {viewMode === "table" ? (
-        <ConstructTableView tasks={formattedTasks} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <ConstructTableView
+          handleCheckListDelete={handleCheckListDelete}
+          handleAddChecklistItem={handleAddChecklistItem}
+          handleCheckListEdit={handleCheckListEdit}
+          tasks={formattedTasks}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+        />
       ) : (
         <ConstructKanbanBoard handleUpdateTaskStatus={handleUpdateTaskStatus} tasks={formattedTasks} />
       )}
@@ -104,9 +165,22 @@ export default function ConstructTablePage() {
       </div>
       <TaskDialog
         onSubmit={handleSaveEdit}
-        open={isBool(editTask?.id || "")}
-        onOpenChange={() => changeBool(editTask?.id || "", false)}
-        data={editTask || ({} as IConstructTask)}
+        open={isBool(selectedTask?.id || "")}
+        onOpenChange={() => {
+          changeBool(selectedTask?.id || "", false);
+          setSelectedTask(null);
+        }}
+        data={selectedTask || ({} as IConstructTask)}
+      />
+      <CheckItemDialog
+        onSubmit={handleSaveChecklistEdit}
+        open={isBool(selectedChecklistItem?.id || "")}
+        onOpenChange={() => {
+          changeBool(selectedChecklistItem?.id || "", false);
+          setSelectedChecklistItem(null);
+          setSelectedTask(null);
+        }}
+        data={selectedChecklistItem || ({} as IChecklistItem)}
       />
     </div>
   );

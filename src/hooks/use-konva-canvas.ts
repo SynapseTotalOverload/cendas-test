@@ -41,7 +41,7 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
   // Image store
-  const imageStore = useImageStore.getState();
+  const imageStore = useImageStore();
 
   // Set stage size to parent container size
   useEffect(() => {
