@@ -40,7 +40,7 @@ export const toStream = <
     handler =>
       (store as any).subscribe(
         selector,
-        value => {
+        (value: TStateSlice) => {
           handler(value);
         },
         options,

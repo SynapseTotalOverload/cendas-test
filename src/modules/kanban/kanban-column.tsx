@@ -8,11 +8,10 @@ import { cn } from "@/lib/utils";
 interface KanbanColumnProps {
   id: TConstructStatuses;
   title: string;
-  color: string;
   tasks: IConstructTask[];
 }
 
-export function KanbanColumn({ id, title, color, tasks }: KanbanColumnProps) {
+export function KanbanColumn({ id, title, tasks }: KanbanColumnProps) {
   const { setNodeRef } = useDroppable({ id });
 
   let bgColor;

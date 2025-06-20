@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Table, Kanban, TableIcon, MapPin, LogOut, Map } from "lucide-react";
+import { Table, Kanban, LogOut, Map } from "lucide-react";
 
 import { ConstructTableView } from "@/modules/table-view/construct-table-view";
 import { ConstructKanbanBoard } from "@/modules/kanban/construct-kanban-board";

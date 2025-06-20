@@ -1,5 +1,4 @@
 import { createRxDatabase, addRxPlugin } from "rxdb";
-import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
 import { RxDBDevModePlugin } from "rxdb/plugins/dev-mode";
 import { wrappedValidateAjvStorage } from "rxdb/plugins/validate-ajv";
 import { getRxStorageDexie } from "rxdb/plugins/storage-dexie";

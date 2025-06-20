@@ -7,9 +7,8 @@ import {
   useSensors,
   type DragStartEvent,
   type DragEndEvent,
-  type DragOverEvent,
 } from "@dnd-kit/core";
-import { arrayMove, rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import type { IConstructTask, TConstructStatuses } from "@/types/construct-task";
 
 import { KanbanColumn } from "@/modules/kanban/kanban-column";
@@ -95,7 +94,7 @@ export function ConstructKanbanBoard({ tasks, handleUpdateTaskStatus }: Construc
           const columnTasks = getTasksByStatus(column.id);
           return (
             <SortableContext key={column.id} items={columnTasks.map(t => t.id)} strategy={rectSortingStrategy}>
-              <KanbanColumn id={column.id} title={column.title} color={column.color} tasks={columnTasks} />
+              <KanbanColumn id={column.id} title={column.title} tasks={columnTasks} />
             </SortableContext>
           );
         })}

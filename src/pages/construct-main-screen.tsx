@@ -42,6 +42,7 @@ const ConstructMainScreen = () => {
       handleImageUpload(file);
     }
   };
+
   const handleUploadSample = async () => {
     const response = await fetch(sampleImageUrl);
     const blob = await response.blob();
@@ -75,8 +76,8 @@ const ConstructMainScreen = () => {
             className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
             onClick={() => {
               handleUploadSample();
-              
-            }}>
+            }}
+            title="Upload Sample">
             <Upload className="w-6 h-6" />
           </Button>
           <Button
@@ -86,26 +87,29 @@ const ConstructMainScreen = () => {
             onClick={() => {
               logoutUser(activeUser?.username || "");
               navigate("/login");
-            }}>
+            }}
+            title="Logout">
             <LogOut className="w-6 h-6" />
           </Button>
           <Button
             variant="secondary"
             size="icon"
             className="w-12 h-12 rounded-full shadow-lg hover:shadow-xl transition-shadow"
-            onClick={() => navigate("/table-view")}>
+            onClick={() => navigate("/table-view")}
+            title="Table View">
             <TableIcon className="w-6 h-6" />
           </Button>
         </div>
       </div>
 
+      {/* Sidebar Tools */}
       <SidebarTools
-        scale={scale}
         onZoomIn={handleZoomIn}
-        onAddTask={handleAddTask}
         onZoomOut={handleZoomOut}
         onUpload={() => fileInputRef.current?.click()}
         onReset={resetView}
+        onAddTask={handleAddTask}
+        scale={scale}
         editMode={editMode}
       />
     </div>
