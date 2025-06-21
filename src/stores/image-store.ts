@@ -12,6 +12,11 @@ type TImageState = {
       width: number;
       height: number;
       createdAt: Date;
+      canvasState?: {
+        scale: number;
+        position: { x: number; y: number };
+        imageId: string;
+      };
     }
   >;
   currentImageId: string | null;
@@ -65,6 +70,15 @@ type TImageActions = {
         createdAt: Date;
       }
     | undefined;
+  hasCurrentImage: () => boolean;
+
+  // Canvas state management
+  saveCanvasState: (canvasState: { scale: number; position: { x: number; y: number }; imageId: string }) => void;
+  getCanvasState: () => {
+    scale: number;
+    position: { x: number; y: number };
+    imageId: string | null;
+  } | null;
 
   // Utility
   clearAllImages: () => void;
@@ -132,6 +146,30 @@ export const useImageStore = create(
       getCurrentImage: () => {
         const { currentImageId, savedImages } = get();
         return currentImageId ? savedImages[currentImageId] : undefined;
+      },
+
+      hasCurrentImage: () => {
+        const { currentImageId } = get();
+        return currentImageId !== null;
+      },
+
+      // Canvas state management
+      saveCanvasState: (canvasState: { scale: number; position: { x: number; y: number }; imageId: string }) => {
+        set(state => ({
+          savedImages: {
+            ...state.savedImages,
+            [canvasState.imageId]: {
+              ...state.savedImages[canvasState.imageId],
+              canvasState: canvasState,
+            },
+          },
+        }));
+      },
+
+      getCanvasState: () => {
+        const { currentImageId, savedImages } = get();
+        if (!currentImageId || !savedImages[currentImageId]) return null;
+        return savedImages[currentImageId].canvasState || null;
       },
 
       // Utility

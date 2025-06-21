@@ -31,6 +31,7 @@ interface UseKonvaCanvasReturn {
   }>;
   deleteImage: (id: string) => void;
   exportCurrentImage: () => File | null;
+  saveCanvasState: () => void;
 }
 
 export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProps = {}): UseKonvaCanvasReturn {
@@ -61,6 +62,57 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
     return () => window.removeEventListener("resize", updateStageSize);
   }, [containerRef]);
 
+  // Auto-restore current image from store when component mounts
+  useEffect(() => {
+    const currentImage = imageStore.getCurrentImage();
+    if (currentImage && !imageElement) {
+      const image = new window.Image();
+      image.src = currentImage.dataUrl;
+      image.onload = () => {
+        setImageElement(image);
+        setImageSize({ width: image.width, height: image.height });
+
+        // Restore canvas state if available
+        const canvasState = imageStore.getCanvasState();
+        if (canvasState) {
+          setScale(canvasState.scale);
+          setPosition(canvasState.position);
+        } else {
+          // Center image in stage
+          if (stageSize) {
+            const x = (stageSize.width - image.width * scale) / 2;
+            const y = (stageSize.height - image.height * scale) / 2;
+            setPosition({ x, y });
+            setScale(
+              stageSize.width / image.width < stageSize.height / image.height
+                ? stageSize.width / image.width
+                : stageSize.height / image.height,
+            );
+          } else {
+            setPosition({ x: 0, y: 0 });
+            setScale(1);
+            // We'll call resetView after stageSize is set
+          }
+        }
+        onImageLoad?.(image);
+      };
+    }
+  }, [imageStore, imageElement, stageSize, scale, onImageLoad]);
+
+  // Call resetView after stageSize is set if we have an image but no proper positioning
+  useEffect(() => {
+    if (imageElement && imageSize && stageSize && position.x === 0 && position.y === 0 && scale === 1) {
+      resetView();
+    }
+  }, [imageElement, imageSize, stageSize, position, scale]);
+
+  // Auto-save canvas state when scale or position changes
+  useEffect(() => {
+    if (imageElement && imageSize && stageSize) {
+      saveCanvasState();
+    }
+  }, [scale, position.x, position.y]);
+
   const resetView = () => {
     if (imageSize && stageSize) {
       // Center image in stage
@@ -83,6 +135,18 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
       image.onload = () => {
         setImageElement(image);
         setImageSize({ width: image.width, height: image.height });
+
+        // Save image to store automatically
+        const dataUrl = e.target?.result as string;
+        const imageName = file.name || `Image_${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}`;
+        const id = imageStore.saveImage({
+          name: imageName,
+          dataUrl,
+          width: image.width,
+          height: image.height,
+        });
+        imageStore.setCurrentImage(id);
+
         // Center image in stage
         if (stageSize) {
           const x = (stageSize.width - image.width * scale) / 2;
@@ -199,6 +263,18 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
     return imageStore.exportImageAsFile(currentImageId);
   };
 
+  const saveCanvasState = () => {
+    const currentImageId = getCurrentImageId();
+    if (currentImageId && imageElement && imageSize && stageSize) {
+      const canvasState = {
+        scale,
+        position: { x: position.x, y: position.y },
+        imageId: currentImageId,
+      };
+      imageStore.saveCanvasState(canvasState);
+    }
+  };
+
   return {
     imageElement,
     imageSize,
@@ -218,5 +294,6 @@ export function useKonvaCanvas({ containerRef, onImageLoad }: UseKonvaCanvasProp
     getAllImages,
     deleteImage,
     exportCurrentImage,
+    saveCanvasState,
   };
 }
