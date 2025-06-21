@@ -1,54 +1,206 @@
-# React + TypeScript + Vite
+# Construct Project - Task Management Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React-based task management application designed for construction projects, featuring interactive canvas-based task placement, Kanban board view, table view, and offline-first architecture with RxDB.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Core Functionality
 
-## Expanding the ESLint configuration
+- **Interactive Canvas**: Upload construction blueprints/images and place tasks directly on them
+- **Task Management**: Create, edit, delete tasks with detailed descriptions and status tracking
+- **Checklist System**: Each task contains multiple checklist items with individual status tracking
+- **Multiple Views**: Canvas view, Kanban board, and table view for different workflow preferences
+- **User Authentication**: Register/login system with persistent sessions
+- **Offline-First**: RxDB integration for local data persistence and synchronization
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Technical Features
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ["./tsconfig.node.json", "./tsconfig.app.json"],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-});
+- **Real-time Synchronization**: Bidirectional sync between Zustand state and RxDB
+- **Drag & Drop**: Interactive task placement and Kanban board functionality
+- **Responsive Design**: Modern UI with Tailwind CSS and Radix UI components
+- **Type Safety**: Full TypeScript implementation
+- **State Management**: Zustand for global state with RxJS streams
+
+## 📊 Time Spent on Features
+
+### Day 1 (8 hours)
+
+- **Project Setup & Architecture** (2 hours)
+  - Vite + React + TypeScript setup
+  - Tailwind CSS configuration
+  - Basic project structure
+- **Database Design & RxDB Integration** (3 hours)
+  - RxDB schema design for tasks, users, active user
+  - Database initialization and configuration
+  - Basic CRUD operations
+- **State Management Setup** (2 hours)
+  - Zustand store configuration
+  - RxJS stream integration
+  - Basic state synchronization
+- **User Authentication** (1 hour)
+  - Basic login/register forms
+  - User store implementation
+
+### Day 2 (8 hours)
+
+- **Canvas Implementation** (4 hours)
+  - React Konva integration
+  - Image upload and display
+  - Zoom and pan functionality
+  - Task placement on canvas
+- **Task Management** (3 hours)
+  - Task creation, editing, deletion
+  - Status management
+  - Basic task interactions
+- **UI Components** (1 hour)
+  - Basic styling and layout
+  - Component structure
+
+### Day 3 (4 hours)
+
+- **Kanban Board** (2 hours)
+  - Drag and drop implementation
+  - Column-based task organization
+  - Status-based filtering
+- **Table View** (1 hour)
+  - Tabular task display
+  - Sorting and filtering
+- **Final Polish** (1 hour)
+  - Bug fixes
+  - UI improvements
+  - Documentation
+
+**Total Time: 20 hours (2.5 days)**
+
+## 🛠️ Installation & Setup
+
+### Prerequisites
+
+- Node.js 18+
+- pnpm (recommended) or npm
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd construct-prjkt
+
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Setup
 
-```js
-// eslint.config.js
-import reactX from "eslint-plugin-react-x";
-import reactDom from "eslint-plugin-react-dom";
+No environment variables required - the application uses local storage and IndexedDB for data persistence.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    "react-x": reactX,
-    "react-dom": reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs["recommended-typescript"].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-});
+## 📖 Usage Instructions
+
+### Getting Started
+
+1. **Register/Login**: Create an account or login with existing credentials
+2. **Upload Blueprint**: Click the upload button to add a construction blueprint image
+3. **Add Tasks**: Click "Add Task" and then click on the canvas to place tasks
+4. **Manage Tasks**: Right-click tasks to edit, delete, or update status
+5. **Switch Views**: Use the navigation to switch between Canvas, Kanban, and Table views
+
+### Task Management
+
+- **Creating Tasks**: Click on canvas in edit mode to place new tasks
+- **Editing Tasks**: Right-click tasks to open edit dialog
+- **Status Updates**: Change task status via dropdown or Kanban drag-and-drop
+- **Checklist Items**: Add, edit, and update status of individual checklist items
+
+### Canvas Navigation
+
+- **Zoom**: Use mouse wheel or zoom buttons
+- **Pan**: Click and drag to move around the canvas
+- **Reset View**: Use the reset button to return to original view
+
+## 🏗️ Architecture
+
+### Tech Stack
+
+- **Frontend**: React 19, TypeScript, Vite
+- **UI**: Tailwind CSS, Radix UI, Lucide Icons
+- **State Management**: Zustand + RxJS
+- **Database**: RxDB with IndexedDB storage
+- **Canvas**: React Konva
+- **Drag & Drop**: @dnd-kit
+- **Forms**: React Hook Form + Zod validation
+
+### Project Structure
+
 ```
+src/
+├── components/          # Reusable UI components
+├── hooks/              # Custom React hooks
+├── lib/                # Utilities and database setup
+├── modules/            # Feature modules
+│   ├── dialogs/        # Modal dialogs
+│   ├── kanban/         # Kanban board components
+│   └── table-view/     # Table view components
+├── pages/              # Route components
+├── schemas/            # Zod validation schemas
+├── stores/             # Zustand stores
+└── types/              # TypeScript type definitions
+```
+
+### Data Flow
+
+1. **User Actions** → Zustand Store
+2. **Zustand Store** → RxDB (via sync function)
+3. **RxDB Changes** → Zustand Store (via subscriptions)
+4. **UI Updates** based on Zustand state
+
+## 🔧 Potential Improvements & Refactoring
+
+### Code Quality Improvements
+
+1. **Error Handling**: Add comprehensive error boundaries and error handling
+2. **Loading States**: Implement proper loading states for async operations
+3. **Form Validation**: Enhance form validation with better error messages
+4. **Type Safety**: Add stricter TypeScript types and remove any types
+
+### Performance Optimizations
+
+1. **Virtualization**: Implement virtual scrolling for large task lists
+2. **Image Optimization**: Add image compression and lazy loading
+3. **Memoization**: Add React.memo and useMemo for expensive operations
+4. **Bundle Splitting**: Implement code splitting for better load times
+
+### Feature Enhancements
+
+1. **Real-time Collaboration**: Add WebSocket support for multi-user editing
+2. **File Attachments**: Allow attaching files to tasks
+3. **Search & Filter**: Advanced search and filtering capabilities
+4. **Export/Import**: Data export to CSV/PDF and import functionality
+5. **Mobile Support**: Responsive design for mobile devices
+6. **Offline Sync**: Better offline/online synchronization
+7. **Task Templates**: Predefined task templates for common construction activities
+
+### Architecture Improvements
+
+1. **Service Layer**: Extract business logic into service classes
+2. **Repository Pattern**: Implement repository pattern for data access
+3. **Event System**: Add event-driven architecture for better decoupling
+4. **Testing**: Add comprehensive unit and integration tests
+5. **CI/CD**: Set up automated testing and deployment pipeline
+
+### UI/UX Improvements
+
+1. **Accessibility**: Add ARIA labels and keyboard navigation
+2. **Dark Mode**: Implement theme switching
+3. **Animations**: Add smooth transitions and micro-interactions
+4. **Responsive Design**: Better mobile and tablet support
+5. **Customization**: Allow users to customize colors and layouts
+
+
+
+**Built with ❤️ for CANDAS **

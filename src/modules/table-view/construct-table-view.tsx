@@ -62,7 +62,7 @@ export function ConstructTableView({
         return (
           <div className="flex items-center justify-end gap-2">
             <DropdownMenu>
-              <DropdownMenuTrigger asChild>
+              <DropdownMenuTrigger>
                 <EllipsisVertical />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start">
