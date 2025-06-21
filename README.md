@@ -23,7 +23,7 @@ A modern React-based task management application designed for construction proje
 
 ## 📊 Time Spent on Features
 
-### Day 1 (8 hours)
+### (8 hours)
 
 - **Project Setup & Architecture** (2 hours)
   - Vite + React + TypeScript setup
@@ -41,7 +41,7 @@ A modern React-based task management application designed for construction proje
   - Basic login/register forms
   - User store implementation
 
-### Day 2 (8 hours)
+### (8 hours)
 
 - **Canvas Implementation** (4 hours)
   - React Konva integration
@@ -56,7 +56,7 @@ A modern React-based task management application designed for construction proje
   - Basic styling and layout
   - Component structure
 
-### Day 3 (4 hours)
+### (4 hours)
 
 - **Kanban Board** (2 hours)
   - Drag and drop implementation
@@ -70,7 +70,7 @@ A modern React-based task management application designed for construction proje
   - UI improvements
   - Documentation
 
-**Total Time: 20 hours (2.5 days)**
+**Total Time: 20 hours (2.5 days) Separated in a week**
 
 ## 🛠️ Installation & Setup
 
@@ -200,7 +200,5 @@ src/
 3. **Animations**: Add smooth transitions and micro-interactions
 4. **Responsive Design**: Better mobile and tablet support
 5. **Customization**: Allow users to customize colors and layouts
-
-
 
 **Built with ❤️ for CANDAS **
