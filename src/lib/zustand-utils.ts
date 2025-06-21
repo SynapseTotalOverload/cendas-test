@@ -18,10 +18,6 @@ type InferState<
   ? TState
   : never;
 
-/**
- * Create a zustand selector as an RxJS observable, inspired
- * by the MobX toStream API: https://github.com/mobxjs/mobx-utils#tostream
- */
 export const toStream = <
   TStore extends {
     getState: GetState<object>;
