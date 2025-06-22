@@ -1,5 +1,9 @@
 # Construct Project - Task Management Application
 
+Video link:
+https://www.dropbox.com/scl/fo/xcpp2311lzi58fvx10xz5/AIfe65rbllAF1mqiJ-1w_GI?rlkey=ryuwp3evi9yho4jx3tz7duius&st=htfts17q&dl=0
+
+
 A modern React-based task management application designed for construction projects, featuring interactive canvas-based task placement, Kanban board view, table view, and offline-first architecture with RxDB.
 
 ## 🚀 Features
